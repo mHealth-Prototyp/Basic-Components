@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "declarationDir": "lib",
+    "target": "es6",
+    "module": "es6",
+    "jsx": "preserve",
+    "sourceMap": true,
+    "declaration": true,
+    "importHelpers": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "experimentalDecorators": true
+  },
+  "include": ["src/**/*.ts", "src/**/*.vue"]
+}
