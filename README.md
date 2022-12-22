@@ -435,7 +435,7 @@ Registers a patient in the EPD Playground.
 <!-- prettier-ignore -->
 | Version | Date       | Changes |
 | ------- | ---------- |-------- |
-| 0.4.2   | 2022-12-XX | - Fixed a bug in createITI65Bundle, where the title in DocumentReference was not set |
+| 0.4.2   | 2022-12-22 | - Fixed a bug in createITI65Bundle, where the title in DocumentReference was not set |
 | 0.4.1   | 2022-12-08 | - Added DocumentView component |
 | 0.4.0   | 2022-10-28 | - added default languages German and French to components<br />- added useITI104() <br />- removed obsolete event upload-result from DocumentUpload and AllergyUpload<br />- fixed missing translation for table entries in DocumentSearch<br />- renamed some translation keys|
 | 0.3.4   | 2022-10-20 | Update dependencies |
