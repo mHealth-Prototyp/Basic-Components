@@ -1,5 +1,5 @@
-import { Coding } from '@i4mi/fhir_r4';
-import { SystemCode, SystemCodeExtension } from './fhirUtils';
+import {Coding} from '@i4mi/fhir_r4';
+import {SystemCode, SystemCodeExtension} from './fhirUtils';
 
 /**
  * Represents a code with a type, a default coding and multiple language displays.
@@ -15,10 +15,10 @@ export interface AllergySystemCodeExtension extends SystemCodeExtension {
     rm: string;
   };
   additionalInformation?: {
-    [lang: string]: { 
-      name: string; 
-      url: string
-    }[]
+    [lang: string]: {
+      name: string;
+      url: string;
+    }[];
   };
 }
 
@@ -263,15 +263,15 @@ const ALLERGY_IDENTIFICATION_CODES1: AllergySystemCodeExtension[] = [
     },
     additionalInformation: {
       de: [
-        { 
-          name: 'aha! Allergiezentrum Schweiz: Fructose-Malabsorption', 
-          url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelintoleranzen/fruktosemalabsorption' 
+        {
+          name: 'aha! Allergiezentrum Schweiz: Fructose-Malabsorption',
+          url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelintoleranzen/fruktosemalabsorption'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Malabsorption du fructose', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/malabsorption-du-fructose?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Malabsorption du fructose",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/malabsorption-du-fructose?lang=fr'
         }
       ]
     }
@@ -337,15 +337,15 @@ const ALLERGY_IDENTIFICATION_CODES1: AllergySystemCodeExtension[] = [
     },
     additionalInformation: {
       de: [
-        { 
-          name: 'aha! Allergiezentrum Schweiz: Hausstaubmilben', 
+        {
+          name: 'aha! Allergiezentrum Schweiz: Hausstaubmilben',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/hausstaubmilbenallergie'
         }
-      ], 
+      ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Acariens de la poussière domestique', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-acariens-de-la-poussiere-de-maison?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Acariens de la poussière domestique",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-acariens-de-la-poussiere-de-maison?lang=fr'
         }
       ]
     }
@@ -7537,14 +7537,14 @@ const ALLERGY_IDENTIFICATION_CODES1: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Schokolade', 
+          name: 'aha! Allergiezentrum Schweiz: Schokolade',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelintoleranzen/histaminintoleranz'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Indolerance à l\'histamine', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/intolerance-histamine?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Indolerance à l'histamine",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/intolerance-histamine?lang=fr'
         }
       ]
     }
@@ -7746,14 +7746,14 @@ const ALLERGY_IDENTIFICATION_CODES1: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Weizenallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Weizenallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/weizenallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: allergie au blé', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-ble?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: allergie au blé",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-ble?lang=fr'
         }
       ]
     }
@@ -7775,14 +7775,14 @@ const ALLERGY_IDENTIFICATION_CODES1: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Weizenallergie', 
-          url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/weizenallergie' 
+          name: 'aha! Allergiezentrum Schweiz: Weizenallergie',
+          url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/weizenallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: allergie au blé', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-ble?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: allergie au blé",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-ble?lang=fr'
         }
       ]
     }
@@ -7804,16 +7804,15 @@ const ALLERGY_IDENTIFICATION_CODES1: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Wespengift-Allergie', 
+          name: 'aha! Allergiezentrum Schweiz: Wespengift-Allergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/insektengiftallergie/wespengiftallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: venin de guêpes', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-de-guepes?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: venin de guêpes",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-de-guepes?lang=fr'
         }
-        
       ]
     }
   },
@@ -7834,14 +7833,14 @@ const ALLERGY_IDENTIFICATION_CODES1: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Bienengift', 
+          name: 'aha! Allergiezentrum Schweiz: Bienengift',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/insektengiftallergie/bienengiftallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au venin d\'abeille', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-d-abeille?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au venin d'abeille",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-d-abeille?lang=fr'
         }
       ]
     }
@@ -8543,9 +8542,9 @@ const ALLERGY_IDENTIFICATION_CODES1: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Intolérance au lactose', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-ble?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Intolérance au lactose",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-ble?lang=fr'
         }
       ]
     }
@@ -8827,9 +8826,9 @@ const ALLERGY_IDENTIFICATION_CODES1: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux arachides', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-arachides?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux arachides",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-arachides?lang=fr'
         }
       ]
     }
@@ -9301,14 +9300,14 @@ const ALLERGY_IDENTIFICATION_CODES1: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Tierallergien', 
+          name: 'aha! Allergiezentrum Schweiz: Tierallergien',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/tierallergie/tierallergien'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux animaux', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-animaux/allergies-aux-animaux?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux animaux",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-animaux/allergies-aux-animaux?lang=fr'
         }
       ]
     }
@@ -9626,7 +9625,8 @@ const ALLERGY_IDENTIFICATION_CODES1: AllergySystemCodeExtension[] = [
       fr: "allergie au venin d'abeilles domestiques",
       it: 'allergia al veleno di ape',
       rm: '?'
-    }, additionalInformation: {
+    },
+    additionalInformation: {
       de: [
         {
           name: 'aha! Allergiezentrum Schweiz: Bienengift',
@@ -9634,9 +9634,9 @@ const ALLERGY_IDENTIFICATION_CODES1: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au venin d\'abeille', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-d-abeille?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au venin d'abeille",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-d-abeille?lang=fr'
         }
       ]
     }
@@ -9663,9 +9663,9 @@ const ALLERGY_IDENTIFICATION_CODES1: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au lait', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au lait",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr'
         }
       ]
     }
@@ -20664,7 +20664,7 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
       code: '2309006',
       display: 'Gold'
     },
-    languageDisplays: { en: 'Gold', de: 'Gold', fr: 'or', it: 'oro', rm: '?' }
+    languageDisplays: {en: 'Gold', de: 'Gold', fr: 'or', it: 'oro', rm: '?'}
   },
   {
     type: AllergyIdentificationType.SUBSTANCE,
@@ -21618,9 +21618,9 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Malabsorption du fructose', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/malabsorption-du-fructose?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Malabsorption du fructose",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/malabsorption-du-fructose?lang=fr'
         }
       ]
     }
@@ -21722,7 +21722,7 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
       code: '67324005',
       display: 'Rice'
     },
-    languageDisplays: { en: 'Rice', de: 'Reis', fr: 'riz', it: 'riso', rm: '?' }
+    languageDisplays: {en: 'Rice', de: 'Reis', fr: 'riz', it: 'riso', rm: '?'}
   },
   {
     type: AllergyIdentificationType.SUBSTANCE,
@@ -21936,14 +21936,14 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Milchallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Milchallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/milchallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au lait', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au lait",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr'
         }
       ]
     }
@@ -22060,9 +22060,9 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Maladie cœliaque', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/maladie-coeliaque-intolerance-gluten?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Maladie cœliaque",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/maladie-coeliaque-intolerance-gluten?lang=fr'
         }
       ]
     }
@@ -22149,9 +22149,9 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Indolerance à l\'histamine', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/intolerance-histamine?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Indolerance à l'histamine",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/intolerance-histamine?lang=fr'
         }
       ]
     }
@@ -22643,9 +22643,9 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Acariens de la poussière domestique', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-acariens-de-la-poussiere-de-maison?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Acariens de la poussière domestique",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-acariens-de-la-poussiere-de-maison?lang=fr'
         }
       ]
     }
@@ -22687,9 +22687,9 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au lait', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au lait",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr'
         }
       ]
     }
@@ -22926,9 +22926,9 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: allergie au blé', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-ble?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: allergie au blé",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-ble?lang=fr'
         }
       ]
     }
@@ -23195,11 +23195,10 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie pollinique', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-pollinique/allergie-pollinique-rhume-des-foins?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie pollinique",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-pollinique/allergie-pollinique-rhume-des-foins?lang=fr'
         }
-        
       ]
     }
   },
@@ -23220,15 +23219,15 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Pollenallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Pollenallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/pollenallergie-heuschnupfen/heuschnupfen-pollenallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie pollinique', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-pollinique/allergie-pollinique-rhume-des-foins?lang=fr' 
-        }        
+        {
+          name: "aha! Centre d'allergie suisse: Allergie pollinique",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-pollinique/allergie-pollinique-rhume-des-foins?lang=fr'
+        }
       ]
     }
   },
@@ -23254,10 +23253,10 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie pollinique', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-pollinique/allergie-pollinique-rhume-des-foins?lang=fr' 
-        }        
+        {
+          name: "aha! Centre d'allergie suisse: Allergie pollinique",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-pollinique/allergie-pollinique-rhume-des-foins?lang=fr'
+        }
       ]
     }
   },
@@ -23283,10 +23282,10 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie pollinique', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-pollinique/allergie-pollinique-rhume-des-foins?lang=fr' 
-        }        
+        {
+          name: "aha! Centre d'allergie suisse: Allergie pollinique",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-pollinique/allergie-pollinique-rhume-des-foins?lang=fr'
+        }
       ]
     }
   },
@@ -23307,15 +23306,15 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Pollenallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Pollenallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/pollenallergie-heuschnupfen/heuschnupfen-pollenallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie pollinique', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-pollinique/allergie-pollinique-rhume-des-foins?lang=fr' 
-        }        
+        {
+          name: "aha! Centre d'allergie suisse: Allergie pollinique",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-pollinique/allergie-pollinique-rhume-des-foins?lang=fr'
+        }
       ]
     }
   },
@@ -23441,14 +23440,14 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Tierallergien', 
+          name: 'aha! Allergiezentrum Schweiz: Tierallergien',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/tierallergie/tierallergien'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux animaux', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-animaux/allergies-aux-animaux?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux animaux",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-animaux/allergies-aux-animaux?lang=fr'
         }
       ]
     }
@@ -23565,9 +23564,9 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au venin d\'abeille', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-d-abeille?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au venin d'abeille",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-d-abeille?lang=fr'
         }
       ]
     }
@@ -23594,11 +23593,10 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: venin de guêpes', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-de-guepes?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: venin de guêpes",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-de-guepes?lang=fr'
         }
-        
       ]
     }
   },
@@ -23789,9 +23787,9 @@ const ALLERGY_IDENTIFICATION_CODES2: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au lait', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au lait",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr'
         }
       ]
     }
@@ -26400,14 +26398,14 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Weizenallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Weizenallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/weizenallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: allergie au blé', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-ble?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: allergie au blé",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-ble?lang=fr'
         }
       ]
     }
@@ -28604,14 +28602,14 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Hausstaubmilben', 
+          name: 'aha! Allergiezentrum Schweiz: Hausstaubmilben',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/hausstaubmilbenallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Acariens de la poussière domestique', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-acariens-de-la-poussiere-de-maison?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Acariens de la poussière domestique",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-acariens-de-la-poussiere-de-maison?lang=fr'
         }
       ]
     }
@@ -28963,14 +28961,14 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Erdnussallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Erdnussallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/erdnussallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux arachides', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-arachides?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux arachides",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-arachides?lang=fr'
         }
       ]
     }
@@ -29702,9 +29700,9 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux animaux', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-animaux/allergies-aux-animaux?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux animaux",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-animaux/allergies-aux-animaux?lang=fr'
         }
       ]
     }
@@ -29996,14 +29994,14 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Milchallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Milchallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/milchallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au lait', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au lait",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr'
         }
       ]
     }
@@ -30030,9 +30028,9 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     }
@@ -30074,9 +30072,9 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     }
@@ -30103,9 +30101,9 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     }
@@ -30127,14 +30125,14 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Nussallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Nussallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/nussallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     }
@@ -30161,9 +30159,9 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     }
@@ -30190,9 +30188,9 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     }
@@ -30586,7 +30584,7 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
       it: 'veleno di ape',
       rm: '?'
     },
-     additionalInformation: {
+    additionalInformation: {
       de: [
         {
           name: 'aha! Allergiezentrum Schweiz: Bienengift',
@@ -30594,9 +30592,9 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au venin d\'abeille', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-d-abeille?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au venin d'abeille",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-d-abeille?lang=fr'
         }
       ]
     }
@@ -30638,11 +30636,10 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: venin de guêpes', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-de-guepes?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: venin de guêpes",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-de-guepes?lang=fr'
         }
-        
       ]
     }
   },
@@ -30683,9 +30680,9 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au lait', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au lait",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr'
         }
       ]
     }
@@ -30712,9 +30709,9 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au lait', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au lait",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr'
         }
       ]
     }
@@ -30737,7 +30734,10 @@ const ALLERGY_IDENTIFICATION_CODES3: AllergySystemCodeExtension[] = [
 ];
 
 // workaround because else the array gets too big for Typescript somehow (o.o)^>
-export const ALLERGY_IDENTIFICATION_CODES = ALLERGY_IDENTIFICATION_CODES1.concat(ALLERGY_IDENTIFICATION_CODES2, ALLERGY_IDENTIFICATION_CODES3);
+export const ALLERGY_IDENTIFICATION_CODES = ALLERGY_IDENTIFICATION_CODES1.concat(
+  ALLERGY_IDENTIFICATION_CODES2,
+  ALLERGY_IDENTIFICATION_CODES3
+);
 
 /**
  * Returns identification codes of given type of ALLERGY_IDENTIFICATION_CODES.
@@ -42464,7 +42464,7 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
       code: '2309006',
       display: 'Gold'
     },
-    languageDisplays: { en: 'Gold', de: 'Gold', fr: 'or', it: 'oro', rm: '?' },
+    languageDisplays: {en: 'Gold', de: 'Gold', fr: 'or', it: 'oro', rm: '?'},
     type: AllergyIdentificationType.SUBSTANCE
   },
   {
@@ -42668,9 +42668,9 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     },
@@ -43427,14 +43427,14 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Fructose-Malabsorption', 
+          name: 'aha! Allergiezentrum Schweiz: Fructose-Malabsorption',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelintoleranzen/fruktosemalabsorption'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Malabsorption du fructose', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/malabsorption-du-fructose?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Malabsorption du fructose",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/malabsorption-du-fructose?lang=fr'
         }
       ]
     },
@@ -43756,14 +43756,14 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Milchallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Milchallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/milchallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au lait', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au lait",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr'
         }
       ]
     },
@@ -43875,14 +43875,14 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Zöliakie / Glutenintoleranz', 
+          name: 'aha! Allergiezentrum Schweiz: Zöliakie / Glutenintoleranz',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelintoleranzen/zoeliakie-glutenintoleranz'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Maladie cœliaque', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/maladie-coeliaque-intolerance-gluten?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Maladie cœliaque",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/maladie-coeliaque-intolerance-gluten?lang=fr'
         }
       ]
     },
@@ -43966,13 +43966,15 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
       de: [
         {
           name: 'aha! Allergiezentrum Schweiz: Schokolade',
-          url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelintoleranzen/histaminintoleranz' 
+          url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelintoleranzen/histaminintoleranz'
         }
       ],
-      fr: [{ 
-        name: 'aha! Centre d\'allergie suisse: Indolerance à l\'histamine', 
-        url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/intolerance-histamine?lang=fr' 
-      }]
+      fr: [
+        {
+          name: "aha! Centre d'allergie suisse: Indolerance à l'histamine",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/intolerances-alimentaires/intolerance-histamine?lang=fr'
+        }
+      ]
     }
   },
   {
@@ -44456,14 +44458,14 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Hausstaubmilben', 
+          name: 'aha! Allergiezentrum Schweiz: Hausstaubmilben',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/hausstaubmilbenallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Acariens de la poussière domestique', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-acariens-de-la-poussiere-de-maison?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Acariens de la poussière domestique",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-acariens-de-la-poussiere-de-maison?lang=fr'
         }
       ]
     },
@@ -44505,9 +44507,9 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au lait', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au lait",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr'
         }
       ]
     },
@@ -44744,9 +44746,9 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: allergie au blé', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-ble?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: allergie au blé",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-ble?lang=fr'
         }
       ]
     },
@@ -45163,9 +45165,9 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     },
@@ -45192,9 +45194,9 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     },
@@ -45221,9 +45223,9 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux animaux', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-animaux/allergies-aux-animaux?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux animaux",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-animaux/allergies-aux-animaux?lang=fr'
         }
       ]
     },
@@ -45340,9 +45342,9 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au venin d\'abeille', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-d-abeille?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au venin d'abeille",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-d-abeille?lang=fr'
         }
       ]
     },
@@ -45369,9 +45371,9 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: venin de guêpes', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-de-guepes?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: venin de guêpes",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-de-guepes?lang=fr'
         }
       ]
     },
@@ -45558,14 +45560,14 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Milchallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Milchallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/milchallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au lait', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au lait",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr'
         }
       ]
     },
@@ -48167,14 +48169,14 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Weizenallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Weizenallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/weizenallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: allergie au blé', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-ble?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: allergie au blé",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-ble?lang=fr'
         }
       ]
     },
@@ -50371,14 +50373,14 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Hausstaubmilben', 
+          name: 'aha! Allergiezentrum Schweiz: Hausstaubmilben',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/hausstaubmilbenallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Acariens de la poussière domestique', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-acariens-de-la-poussiere-de-maison?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Acariens de la poussière domestique",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-acariens-de-la-poussiere-de-maison?lang=fr'
         }
       ]
     },
@@ -50730,22 +50732,22 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Erdnussallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Erdnussallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/erdnussallergie'
-        }, 
-        { 
-          name: 'aha! Allergiezentrum Schweiz: Nussallergie', 
+        },
+        {
+          name: 'aha! Allergiezentrum Schweiz: Nussallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/nussallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux arachides', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-arachides?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux arachides",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-arachides?lang=fr'
         },
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     },
@@ -51457,14 +51459,14 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Latex-Allergie', 
+          name: 'aha! Allergiezentrum Schweiz: Latex-Allergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/latexallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au latex', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-au-latex?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au latex",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-au-latex?lang=fr'
         }
       ]
     },
@@ -51491,9 +51493,9 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux animaux', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-animaux/allergies-aux-animaux?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux animaux",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-animaux/allergies-aux-animaux?lang=fr'
         }
       ]
     },
@@ -51790,9 +51792,9 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au lait', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au lait",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr'
         }
       ]
     },
@@ -51814,14 +51816,14 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Nussallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Nussallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/nussallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     },
@@ -51858,14 +51860,14 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Nussallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Nussallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/nussallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     },
@@ -51907,9 +51909,9 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     },
@@ -51931,14 +51933,14 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Nussallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Nussallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/nussallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     },
@@ -51965,9 +51967,9 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie aux noix', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie aux noix",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-aux-noix?lang=fr'
         }
       ]
     },
@@ -52364,14 +52366,14 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Bienengift', 
+          name: 'aha! Allergiezentrum Schweiz: Bienengift',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/insektengiftallergie/bienengiftallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au venin d\'abeille', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-d-abeille?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au venin d'abeille",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-d-abeille?lang=fr'
         }
       ]
     },
@@ -52408,16 +52410,15 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Wespengift-Allergie', 
+          name: 'aha! Allergiezentrum Schweiz: Wespengift-Allergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/insektengiftallergie/wespengiftallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: venin de guêpes', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-de-guepes?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: venin de guêpes",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-aux-venins-d-insectes/allergie-au-venin-de-guepes?lang=fr'
         }
-        
       ]
     },
     type: AllergyIdentificationType.SUBSTANCE
@@ -52453,14 +52454,14 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Milchallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Milchallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/milchallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au lait', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au lait",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr'
         }
       ]
     },
@@ -52482,14 +52483,14 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
     additionalInformation: {
       de: [
         {
-          name: 'aha! Allergiezentrum Schweiz: Milchallergie', 
+          name: 'aha! Allergiezentrum Schweiz: Milchallergie',
           url: 'https://www.aha.ch/allergiezentrum-schweiz/allergien-intoleranzen/nahrungsmittelallergien/milchallergie'
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au lait', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au lait",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-alimentaire/allergie-au-lait?lang=fr'
         }
       ]
     },
@@ -52516,9 +52517,9 @@ export const REACTION_SUBSTANCE_CODES: AllergySystemCodeExtension[] = [
         }
       ],
       fr: [
-        { 
-          name: 'aha! Centre d\'allergie suisse: Allergie au latex', 
-          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-au-latex?lang=fr' 
+        {
+          name: "aha! Centre d'allergie suisse: Allergie au latex",
+          url: 'https://www.aha.ch/centre-allergie-suisse/allergies-intolerances/allergie-au-latex?lang=fr'
         }
       ]
     },
@@ -52814,7 +52815,7 @@ export const REACTION_LOCATION_CODES: SystemCode[] = [
     code: '318001',
     display: 'Cardiac impression of liver'
   },
-  { system: 'http://snomed.info/sct', code: '344001', display: 'Ankle' },
+  {system: 'http://snomed.info/sct', code: '344001', display: 'Ankle'},
   {
     system: 'http://snomed.info/sct',
     code: '345000',
@@ -52955,7 +52956,7 @@ export const REACTION_LOCATION_CODES: SystemCode[] = [
     code: '660006',
     display: 'Tracheal mucous membrane'
   },
-  { system: 'http://snomed.info/sct', code: '661005', display: 'Jaw region' },
+  {system: 'http://snomed.info/sct', code: '661005', display: 'Jaw region'},
   {
     system: 'http://snomed.info/sct',
     code: '667009',
@@ -53046,7 +53047,7 @@ export const REACTION_LOCATION_CODES: SystemCode[] = [
     code: '947002',
     display: 'Crus of diaphragm'
   },
-  { system: 'http://snomed.info/sct', code: '955009', display: 'Bronchus' },
+  {system: 'http://snomed.info/sct', code: '955009', display: 'Bronchus'},
   {
     system: 'http://snomed.info/sct',
     code: '976004',
@@ -53097,7 +53098,7 @@ export const REACTION_LOCATION_CODES: SystemCode[] = [
     code: '1076006',
     display: 'Subcutaneous prepatellar bursa'
   },
-  { system: 'http://snomed.info/sct', code: '1086007', display: 'Female' },
+  {system: 'http://snomed.info/sct', code: '1086007', display: 'Female'},
   {
     system: 'http://snomed.info/sct',
     code: '1087003',
@@ -53198,7 +53199,7 @@ export const REACTION_LOCATION_CODES: SystemCode[] = [
     code: '1277008',
     display: 'Vertebral nerve'
   },
-  { system: 'http://snomed.info/sct', code: '1307006', display: 'Glottis' },
+  {system: 'http://snomed.info/sct', code: '1307006', display: 'Glottis'},
   {
     system: 'http://snomed.info/sct',
     code: '1311000',
@@ -53304,7 +53305,7 @@ export const REACTION_LOCATION_CODES: SystemCode[] = [
     code: '1581009',
     display: 'Ileal artery'
   },
-  { system: 'http://snomed.info/sct', code: '1584001', display: 'Symphysis' },
+  {system: 'http://snomed.info/sct', code: '1584001', display: 'Symphysis'},
   {
     system: 'http://snomed.info/sct',
     code: '1600003',
@@ -53315,7 +53316,7 @@ export const REACTION_LOCATION_CODES: SystemCode[] = [
     code: '1605008',
     display: 'Histioblast'
   },
-  { system: 'http://snomed.info/sct', code: '1610007', display: 'Otoconia' },
+  {system: 'http://snomed.info/sct', code: '1610007', display: 'Otoconia'},
   {
     system: 'http://snomed.info/sct',
     code: '1611006',
@@ -53346,7 +53347,7 @@ export const REACTION_LOCATION_CODES: SystemCode[] = [
     code: '1630006',
     display: 'Supraorbital vein'
   },
-  { system: 'http://snomed.info/sct', code: '1631005', display: 'Foregut' },
+  {system: 'http://snomed.info/sct', code: '1631005', display: 'Foregut'},
   {
     system: 'http://snomed.info/sct',
     code: '1650005',
@@ -55362,7 +55363,7 @@ export const REACTION_LOCATION_CODES: SystemCode[] = [
     code: '5653000',
     display: 'Inner surface of seventh rib'
   },
-  { system: 'http://snomed.info/sct', code: '5665001', display: 'Retina' },
+  {system: 'http://snomed.info/sct', code: '5665001', display: 'Retina'},
   {
     system: 'http://snomed.info/sct',
     code: '5668004',

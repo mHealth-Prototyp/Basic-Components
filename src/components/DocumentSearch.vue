@@ -1,45 +1,93 @@
 <template>
-<div>
-  <div class="loading"
-       v-if="fetchingMpiID || fetchingMetadata">
-    <QLinearProgress :value="fetchingProgress" class="q-mt-md" />
-    <p v-if="fetchingMpiID" class="pulse">{{ translations.fetchMpiLabel }}</p>
-    <p v-if="mpiID.value" class="ready">{{ translations.mpiLabel}} {{ mpiID.value }}</p>
-    <p v-if="fetchingMetadata" class="pulse">{{ translations.fetchMetadataLabel }}</p>
+  <div>
+    <div
+      class="loading"
+      v-if="fetchingMpiID || fetchingMetadata">
+      <QLinearProgress
+        :value="fetchingProgress"
+        class="q-mt-md" />
+      <p
+        v-if="fetchingMpiID"
+        class="pulse">
+        {{ componentTranslations.fetchMpiLabel }}
+      </p>
+      <p
+        v-if="mpiID.value"
+        class="ready">
+        {{ componentTranslations.fetchedMpiLabel }} {{ mpiID.value }}
+      </p>
+      <p
+        v-if="fetchingMetadata"
+        class="pulse">
+        {{ componentTranslations.fetchMetadataLabel }}
+      </p>
+    </div>
+    <div v-else>
+      <QTable
+        :title="componentTranslations.titleLabel + mpiID.value"
+        dense
+        :rows="documents"
+        :columns="tableColumns"
+        :filter="tableFilter"
+        :filter-method="filterTable"
+        :pagination="{rowsPerPage: 10}"
+        @row-click="selectDocument">
+        <template v-slot:top-right>
+          <QInput
+            borderless
+            dense
+            debounce="300"
+            v-model="tableFilter"
+            :placeholder="componentTranslations.searchLabel">
+            <template v-slot:append>
+              <QIcon name="fas fa-search" />
+            </template>
+          </QInput>
+        </template>
+      </QTable>
+    </div>
+    <p
+      v-if="fetchingError"
+      class="warning">
+      {{ componentTranslations.fetchingError }}
+    </p>
   </div>
-  <div v-else>
-    <QTable :title="translations.titleLabel + mpiID.value"
-             dense
-             :rows="documents"
-             :columns="tableColumns"
-             :filter="tableFilter"
-             :filter-method="filterTable"
-             :pagination="{rowsPerPage: 10}"
-             @row-click="selectDocument"
-    >
-      <template v-slot:top-right>
-        <QInput borderless dense debounce="300" v-model="tableFilter" :placeholder="translations.searchLabel">
-          <template v-slot:append>
-            <QIcon name="fas fa-search" />
-          </template>
-        </QInput>
-      </template>
-    </QTable>
-  </div>
-  <p v-if="fetchingError" class="warning">{{ translations.fetchingError }}</p>
-</div>
 </template>
 
 <script lang="ts">
-import { DocumentReference, Patient, DocumentReferenceStatus, Identifier, Coding } from '@i4mi/fhir_r4';
-import { QLinearProgress, QIcon, QTable, QInput } from 'quasar';
-import FhirUtils, { FhirUtilLanguageType } from '../utils/fhirUtils';
-import { defineComponent, PropType } from 'vue';
+import {DocumentReference, Patient, DocumentReferenceStatus, Identifier, Coding} from '@i4mi/fhir_r4';
+import {QLinearProgress, QIcon, QTable, QInput, QTableColumn} from 'quasar';
+import FhirUtils, {CHAllergyIntolerance, FhirUtilLanguageType} from '../utils/fhirUtils';
+import {defineComponent, PropType} from 'vue';
 import EpdPlaygroundUtils from '../utils/epdPlaygroundUtils';
-import { DocumentSearchTranslationStrings } from '../TranslationInterfaces';
+import {DocumentSearchTranslationStrings} from '../TranslationInterfaces';
+import * as DE from '../assets/de.json';
+import * as FR from '../assets/fr.json';
+import {AllergyIdentificationType} from '..';
+import {getAllergyIdentificationCodesByType} from '../utils/allergyCodes';
+import {translateDevTools} from '@intlify/core-base';
 
 // the delay for transactions when in demo mode (in ms)
 const DEMO_MODE_DELAY = 2000;
+
+// // Intstantiate class of interface to iterate translation keys
+class DocumentSearchTranslations implements DocumentSearchTranslationStrings {
+  titleLabel = '';
+  kiloByteLabel = '';
+  megaByteLabel = '';
+  fetchMpiLabel = '';
+  fetchedMpiLabel = '';
+  fetchMetadataLabel = '';
+  fetchingError = '';
+  searchLabel = '';
+  dateLabel = '';
+  descriptionLabel = '';
+  classLabel = '';
+  typeLabel = '';
+  authorLabel = '';
+  fileTypeLabel = '';
+  fileSizeLabel = '';
+}
 
 /**
  * Loads & displays documents that belong to a patient.
@@ -47,114 +95,50 @@ const DEMO_MODE_DELAY = 2000;
 const DocumentSearch = defineComponent({
   name: 'DocumentSearch',
   components: {
-    QLinearProgress, QIcon, QTable, QInput
+    QLinearProgress,
+    QIcon,
+    QTable,
+    QInput
   },
   data() {
     return {
-      loadedDocuments: new Array<DocumentReference>(),  // the fetched Metadata Resources
-      fetchingMpiID: false,                             // indicates if the fetching of the MPI ID is in process
-      fetchingMetadata: false,                          // indicates if the fetching of metadata is in process
-      fetchingError: false,                             // indicates an error fetching the data
-      fetchingProgress: 0,                              // model for progress bar
+      loadedDocuments: new Array<DocumentReference>(), // the fetched Metadata Resources
+      fetchingMpiID: false, // indicates if the fetching of the MPI ID is in process
+      fetchingMetadata: false, // indicates if the fetching of metadata is in process
+      fetchingError: false, // indicates an error fetching the data
+      fetchingProgress: 0, // model for progress bar
       dateFormatter: new Intl.DateTimeFormat(this.$props.locale || 'de-CH'),
-                                                        // helper for formating date according to locale
-      mpiID: {} as Identifier,                          // the fetched master patient index ID
-      tableFilter: '',                                  // model for filtering the result table
-      tableColumns: [                                   // definitions of the result table rows
-        {
-          name: 'date',
-          required: true,
-          label: this.$props.translations.dateLabel,
-          align: 'left',
-          field: (row: DocumentReference) => row.date,
-          format: this.formatDateString,
-          sortable: true
-        },
-        {
-          name: 'description',
-          required: true,
-          label: this.$props.translations.descriptionLabel,
-          align: 'left',
-          field: (row: DocumentReference) => row.description,
-          format: (val: string) => this.shortenString(val) as string,
-          sortable: true
-        },
-        {
-          name: 'class',
-          required: false,
-          label: this.$props.translations.classLabel,
-          align: 'left',
-          field: (row: DocumentReference) => row.category && row.category[0].coding ? row.category[0].coding[0] : null,
-          format: (coding: Coding) => {
-            if (coding && coding.code) {
-              const translated = this.fhirUtils.getClassCodeString(coding.code, 'de');
-              return translated === '?' && coding.display
-                ? this.shortenString(coding.display) as string
-                : this.shortenString(translated) as string
-            }
-            return '?';
-          },
-          sortable: true
-        },
-        {
-          name: 'type',
-          required: false,
-          label: this.$props.translations.typeLabel,
-          align: 'left',
-          field: (row: DocumentReference) => row.type && row.type.coding ? row.type.coding[0] : null,
-          format: (coding: Coding) => {
-            if (coding && coding.code) {
-              const translated = this.fhirUtils.getTypeCodeString(coding.code, 'de');
-              return translated === '?' && coding.display
-                ? this.shortenString(coding.display) as string
-                : this.shortenString(translated) as string
-            }
-            return '?';
-          },
-          sortable: true
-        },
-        {
-          name: 'sourceType',
-          required: false,
-          label: this.$props.translations.authorLabel,
-          align: 'left',
-          field: (row: DocumentReference) => row.context?.facilityType?.coding ? row.context?.facilityType?.coding[0] : null,
-          format: (coding: Coding) => {
-            if (coding && coding.code) {
-              const translated = this.fhirUtils.getFacilityClassCodeString(coding.code, 'de');
-              return (translated === '?' && coding.display)
-                ? this.shortenString(coding.display) as string
-                : this.shortenString(translated) as string
-            }
-            return '?';
-          },
-          sortable: true
-        },
-        {
-          name: 'filetype',
-          required: false,
-          label: this.$props.translations.fileTypeLabel,
-          align: 'left',
-          field: (row: DocumentReference) => row.content[0].attachment.contentType,
-          format: (val: string) => val,
-          sortable: true
-        },
-        {
-          name: 'size',
-          required: false,
-          label: this.$props.translations.fileSizeLabel,
-          align: 'left',
-          field: (row: DocumentReference) => row.content[0].attachment.size,
-          format: (val: number) => {
-            return (Math.round(val / 1.024) / 1000).toString() + ' ' +
-              ( val < 1024 * 1024
-                ? this.$props.translations.kiloByteLabel
-                : this.$props.translations.megaByteLabel
-              )
-            },
-          sortable: true
-        }
-      ]
+      // helper for formating date according to locale
+      mpiID: {} as Identifier, // the fetched master patient index ID
+      tableFilter: '', // model for filtering the result table
+      tableColumns: new Array<QTableColumn>(),
+      componentTranslations: new DocumentSearchTranslations(),
+      // contains default translations from library but can be oberwritten individually via translations prop
+      allergyCodeOptions: getAllergyIdentificationCodesByType([
+        AllergyIdentificationType.SITUATION,
+        AllergyIdentificationType.DISORDER,
+        AllergyIdentificationType.FINDING,
+        AllergyIdentificationType.MEDICINAL_PRODUCT,
+        AllergyIdentificationType.ORGANISM,
+        AllergyIdentificationType.PHYSICAL_OBJECT,
+        AllergyIdentificationType.SUBSTANCE
+      ])
+      // all possible options of allergy codes, needed to translate description display of allergy resource
+    };
+  },
+  i18n: {
+    // default translations for this component
+    messages: {
+      'de-CH': Object.assign({}, DE.documentSearch, {
+        searchLabel: DE.common.search,
+        descriptionLabel: DE.common.description,
+        typeLabel: DE.common.type
+      }),
+      'fr-CH': Object.assign({}, FR.documentSearch, {
+        searchLabel: FR.common.search,
+        descriptionLabel: FR.common.description,
+        typeLabel: FR.common.type
+      })
     }
   },
   emits: {
@@ -162,7 +146,7 @@ const DocumentSearch = defineComponent({
      * Make available selected document to parent component e.g. for download or display.
      * Emitted when the user selects a document from the search result list.
      */
-    'found-document': (payload: {document: string, metadata: DocumentReference}) => {
+    'found-document': (payload: {document: string; metadata: DocumentReference}) => {
       if (payload !== undefined && payload.document && payload.metadata) {
         return true;
       } else {
@@ -180,12 +164,12 @@ const DocumentSearch = defineComponent({
       required: true
     },
     /**
-     * Strings for displaying on the page.
+     * Strings to overwrite default translations of component. Oberwrite by individual keys is supported.
      * @see   DocumentSearchTranslationStrings interface for details
      */
     translations: {
       type: Object as PropType<DocumentSearchTranslationStrings>,
-      required: true
+      required: false
     },
     /**
      * Array of documents added on client (e.g. with DocumentUpload.vue) after data was fetched from server.
@@ -201,7 +185,7 @@ const DocumentSearch = defineComponent({
       type: String,
       required: false
     },
-     /**
+    /**
      * Two-character representation for the current language. Must be one of
      * 'de' | 'en' | 'fr' | 'it' | 'rm'
      */
@@ -223,7 +207,7 @@ const DocumentSearch = defineComponent({
     fhirUtils: {
       type: Object as PropType<FhirUtils>,
       required: true
-    },    
+    },
     /**
      * EpdPlaygroundUtils object initialized with the projects setup.
      */
@@ -232,10 +216,177 @@ const DocumentSearch = defineComponent({
       required: true
     }
   },
-  mounted() {
-    this.fetchData();
+  beforeMount() {
+    this.setupTranslations();
+
+    this.fetchData()
+      .then((documents) => (this.loadedDocuments = documents))
+      .then(this.setupTableColumns)
+      .catch((e: Error) => {
+        this.fetchingError = true;
+        console.log('Error fetching documents:', e);
+      });
   },
   methods: {
+    /**
+     * Setting up columns with loaded documents.
+     * The description of allergy intolerance resources is translated.
+     */
+    setupTableColumns() {
+      const documentPromises = new Array<Promise<any>>();
+      this.documents.forEach((document) => {
+        if (this.checkIfIsAllergy(document)) {
+          documentPromises.push(
+            this.$props.epdPlaygroundUtils
+              .useITI68(document)
+              .then((allergy) => {
+                const allergyDisplay = JSON.parse(allergy) as CHAllergyIntolerance;
+                if (allergyDisplay && allergyDisplay.code && allergyDisplay.code.coding && allergyDisplay.code.coding[0].code) {
+                  const translatedCodeDisplay = this.fhirUtils.getDisplayByCodeAndLanguage(
+                    allergyDisplay.code.coding[0].code,
+                    this.allergyCodeOptions,
+                    this.languageString
+                  );
+                  return translatedCodeDisplay;
+                }
+              })
+              .catch((e) => {
+                console.log(e);
+                return '?';
+              })
+          );
+        } else {
+          documentPromises.push(Promise.resolve(document.description));
+        }
+      });
+
+      Promise.all(documentPromises).then((translatedDescriptions) => {
+        this.tableColumns = [
+          // definitions of the result table rows
+          {
+            name: 'date',
+            required: true,
+            label: this.componentTranslations.dateLabel,
+            align: 'left',
+            field: (row: DocumentReference) => row.date,
+            format: this.formatDateString,
+            sortable: true
+          },
+          {
+            name: 'description',
+            required: true,
+            label: this.componentTranslations.descriptionLabel,
+            align: 'left',
+            field: (row: DocumentReference) => {
+              const index = this.documents.findIndex((doc) => doc.id === row.id);
+              return translatedDescriptions[index];
+            },
+            format: (val: string) => this.shortenString(val) as string,
+            sortable: true
+          },
+          {
+            name: 'class',
+            required: false,
+            label: this.componentTranslations.classLabel,
+            align: 'left',
+            field: (row: DocumentReference) =>
+              row.category && row.category[0].coding ? row.category[0].coding[0] : null,
+            format: (coding: Coding) => {
+              if (coding && coding.code) {
+                const translated = this.fhirUtils.getClassCodeString(coding.code, this.languageString);
+                return translated === '?' && coding.display
+                  ? (this.shortenString(coding.display) as string)
+                  : (this.shortenString(translated) as string);
+              }
+              return '?';
+            },
+            sortable: true
+          },
+          {
+            name: 'type',
+            required: false,
+            label: this.componentTranslations.typeLabel,
+            align: 'left',
+            field: (row: DocumentReference) => (row.type && row.type.coding ? row.type.coding[0] : null),
+            format: (coding: Coding) => {
+              if (coding && coding.code) {
+                const translated = this.fhirUtils.getTypeCodeString(coding.code, this.languageString);
+                return translated === '?' && coding.display
+                  ? (this.shortenString(coding.display) as string)
+                  : (this.shortenString(translated) as string);
+              }
+              return '?';
+            },
+            sortable: true
+          },
+          {
+            name: 'sourceType',
+            required: false,
+            label: this.componentTranslations.authorLabel,
+            align: 'left',
+            field: (row: DocumentReference) =>
+              row.context?.facilityType?.coding ? row.context?.facilityType?.coding[0] : null,
+            format: (coding: Coding) => {
+              if (coding && coding.code) {
+                const translated = this.fhirUtils.getFacilityClassCodeString(coding.code, this.languageString);
+                return translated === '?' && coding.display
+                  ? (this.shortenString(coding.display) as string)
+                  : (this.shortenString(translated) as string);
+              }
+              return '?';
+            },
+            sortable: true
+          },
+          {
+            name: 'filetype',
+            required: false,
+            label: this.componentTranslations.fileTypeLabel,
+            align: 'left',
+            field: (row: DocumentReference) => row.content[0].attachment.contentType,
+            format: (val: string) => val,
+            sortable: true
+          },
+          {
+            name: 'size',
+            required: false,
+            label: this.componentTranslations.fileSizeLabel,
+            align: 'left',
+            field: (row: DocumentReference) => row.content[0].attachment.size,
+            format: (val: number) => {
+              return (
+                (Math.round(val / 1.024) / 1000).toString() +
+                ' ' +
+                (val < 1024 * 1024
+                  ? this.componentTranslations.kiloByteLabel
+                  : this.componentTranslations.megaByteLabel)
+              );
+            },
+            sortable: true
+          }
+        ];
+      });
+    },
+    /**
+     * Iterates over translation keys, sets default translation or set from prop.
+     */
+    setupTranslations() {
+      let defaultTranslations = this.componentTranslations;
+
+      for (let i in defaultTranslations) {
+        if (defaultTranslations.hasOwnProperty(i)) {
+          type ObjectKey = keyof typeof defaultTranslations;
+          const translationKey = i as ObjectKey;
+
+          if (this.translations && this.translations[translationKey]) {
+            // there is a translation from prop
+            this.componentTranslations[translationKey] = this.translations[translationKey];
+          } else {
+            // we take default translation
+            this.componentTranslations[translationKey] = this.$t(translationKey);
+          }
+        }
+      }
+    },
     /**
      * Fetches the metadata from EPD playground. Relies on patient object in props and
      * modifies the component state, so the method no direct in- and output.
@@ -243,52 +394,63 @@ const DocumentSearch = defineComponent({
      * identifier (even if this identifier is probably already known, to ensure the correct process).
      * Then it uses the retrieved MPI identifier to fetch the metadata for the available documents
      * and writes them to the state, so the document table is updated.
+     * @returns An array of fetched DocumentReferences
      */
-    fetchData() {
-      this.fetchingMpiID = true;
-      this.fetchingError = false;
-      // find local ID of patient
-      let localId = this.$props.patient.identifier?.find(i => i.system === this.epdPlaygroundUtils.getOids().local);
-      if (localId) {
-        const localIdString = this.getIDStringFromIdentifier(localId);
+    fetchData(): Promise<DocumentReference[]> {
+      return new Promise((resolve, reject) => {
+        this.fetchingMpiID = true;
+        this.fetchingError = false;
+        // find local ID of patient
+        let localId = this.$props.patient.identifier?.find((i) => i.system === this.epdPlaygroundUtils.getOids().local);
+        if (localId) {
+          const localIdString = this.getIDStringFromIdentifier(localId);
 
-        setTimeout(() => {
-        // use local ID to fetch MPI ID
-        this.fetchingProgress = 0.5;
-        this.epdPlaygroundUtils.useITI83(localIdString, [this.epdPlaygroundUtils.getOids().mpiId])
-        .then((ids) => {
-          this.fetchingMpiID = false;
-          this.fetchingMetadata = true;
-          this.mpiID = ids.parameter?.find(
-              p => (p.name === 'targetIdentifier') && p.valueIdentifier
-            )?.valueIdentifier || {};
-          // now we fetched the MPI ID, we can query for documents
-          this.epdPlaygroundUtils.useITI67({
-            status: DocumentReferenceStatus.CURRENT,
-            'patient.identifier': this.getIDStringFromIdentifier(this.mpiID)
-          })
-          .then((documentReferences) => {
-            this.loadedDocuments = documentReferences;
-          })
-          .catch((e: Error) => {
-            this.fetchingError = true;
-            console.log('Error fetching metadata', e);
-          })
-          .finally(() => {
-            setTimeout(() => {
-              this.fetchingProgress = 1;
-              this.fetchingMetadata = false;
-            }, this.$props.demoMode ? DEMO_MODE_DELAY : 0);
-          });
-        })
-        .catch((e: Error) => {
-          this.fetchingError = true;
-          console.log('Error fetching Master Patient Index ID', e);
-        });
-        }, this.$props.demoMode ? DEMO_MODE_DELAY : 0);
-      } else {
-        console.log('Can not fetch data when patient has no local ID.');
-      }
+          setTimeout(
+            () => {
+              // use local ID to fetch MPI ID
+              this.fetchingProgress = 0.5;
+              this.epdPlaygroundUtils
+                .useITI83(localIdString, [this.epdPlaygroundUtils.getOids().mpiId])
+                .then((ids) => {
+                  this.fetchingMpiID = false;
+                  this.fetchingMetadata = true;
+                  this.mpiID =
+                    ids.parameter?.find((p) => p.name === 'targetIdentifier' && p.valueIdentifier)?.valueIdentifier ||
+                    {};
+                  // now we fetched the MPI ID, we can query for documents
+                  this.epdPlaygroundUtils
+                    .useITI67({
+                      status: DocumentReferenceStatus.CURRENT,
+                      'patient.identifier': this.getIDStringFromIdentifier(this.mpiID)
+                    })
+                    .then((documentReferences) => {
+                      resolve(documentReferences);
+                    })
+                    .catch((e: Error) => {
+                      console.error(e);
+                      reject('Error fetching metadata');
+                    })
+                    .finally(() => {
+                      setTimeout(
+                        () => {
+                          this.fetchingProgress = 1;
+                          this.fetchingMetadata = false;
+                        },
+                        this.$props.demoMode ? DEMO_MODE_DELAY : 0
+                      );
+                    });
+                })
+                .catch((e: Error) => {
+                  console.error(e);
+                  reject('Error fetching Master Patient Index ID');
+                });
+            },
+            this.$props.demoMode ? DEMO_MODE_DELAY : 0
+          );
+        } else {
+          reject('Can not fetch data when patient has no local ID.');
+        }
+      });
     },
     /**
      * Handles selection of a document in UI. Fetches document and emits document to be handled be parent component.
@@ -298,18 +460,24 @@ const DocumentSearch = defineComponent({
      *                          when loading was successful, the foundDocument event is emitted.
      */
     selectDocument(_: Event, documentReference: DocumentReference): void {
-      if (documentReference.content && documentReference.content[0] && documentReference.content[0].attachment && documentReference.content[0].attachment.url) {
-        this.epdPlaygroundUtils.useITI68(documentReference)
-        .then((document: string) => {
+      if (
+        documentReference.content &&
+        documentReference.content[0] &&
+        documentReference.content[0].attachment &&
+        documentReference.content[0].attachment.url
+      ) {
+        this.epdPlaygroundUtils
+          .useITI68(documentReference)
+          .then((document: string) => {
             this.$emit('found-document', {
               document: document,
               metadata: documentReference
             });
-        })
-        .catch((e: Error) => {
-          this.fetchingError = true;
-          console.log('Error fetching document', e);
-        });
+          })
+          .catch((e: Error) => {
+            this.fetchingError = true;
+            console.log('Error fetching document', e);
+          });
       }
     },
     /**
@@ -346,7 +514,7 @@ const DocumentSearch = defineComponent({
     shortenString(str: string, length?: number): string {
       if (str && str.length > 0) {
         length = length || window.innerWidth / 40;
-        return str.substring(0,length-1) + (str.length > length-1 ? '…' : '');
+        return str.substring(0, length - 1) + (str.length > length - 1 ? '…' : '');
       } else {
         return '';
       }
@@ -355,53 +523,66 @@ const DocumentSearch = defineComponent({
      * Helper function to filter the result table. Searches in translated source type,
      * translated document type, document description, file type and in date.
      * Not case sensitive
-     * @param data    the unfiltered data array
+     * @param rows    the unfiltered data array
      * @param filter  the string to filter
      * @returns       the filtered data as an array
      */
-    filterTable(data: DocumentReference[], filter: string): DocumentReference[] {
-      const locale = this.$props.locale || 'de-CH';
+    filterTable(rows: any, filter: string): DocumentReference[] {
       filter = filter.toLowerCase();
-      return data.filter(docRef => {
+      const data = rows as DocumentReference[];
+      return data.filter((docRef) => {
         let sourceType = '';
         let docCategory = '';
-        let docType = ''
-        if (docRef.context?.facilityType?.coding ) {
+        let docType = '';
+        if (docRef.context?.facilityType?.coding) {
           const coding = docRef.context?.facilityType?.coding[0];
 
           if (coding && coding.code) {
             const translated = this.fhirUtils.getFacilityClassCodeString(coding.code, this.languageString);
-            sourceType = (translated === '?' && coding.display)
-              ? coding.display
-              : translated ;
+            sourceType = translated === '?' && coding.display ? coding.display : translated;
           }
         }
         if (docRef.category && docRef.category[0].coding) {
           const coding = docRef.category[0].coding[0];
           if (coding && coding.code) {
-              const translated = this.fhirUtils.getClassCodeString(coding.code, this.languageString);
-              docCategory = (translated === '?' && coding.display)
-                ? coding.display
-                : translated ;
-            }
+            const translated = this.fhirUtils.getClassCodeString(coding.code, this.languageString);
+            docCategory = translated === '?' && coding.display ? coding.display : translated;
+          }
         }
         if (docRef.type && docRef.type.coding) {
           const coding = docRef.type.coding[0];
           if (coding && coding.code) {
-              const translated = this.fhirUtils.getTypeCodeString(coding.code, this.languageString);
-              docType = (translated === '?' && coding.display)
-                ? coding.display
-                : translated ;
-            }
+            const translated = this.fhirUtils.getTypeCodeString(coding.code, this.languageString);
+            docType = translated === '?' && coding.display ? coding.display : translated;
+          }
         }
-        return docRef.description && docRef.description.toLowerCase().includes(filter) ||
-               docRef.date && docRef.date.toLowerCase().includes(filter) ||
-               docRef.content[0].attachment.contentType && docRef.content[0].attachment.contentType.toLowerCase().includes(filter) ||
-               docRef.date && this.formatDateString(docRef.date).toLowerCase().includes(filter) ||
-               sourceType.toLowerCase().includes(filter) ||
-               docCategory.toLowerCase().includes(filter) ||
-               docType.toLowerCase().includes(filter);
+        return (
+          (docRef.description && docRef.description.toLowerCase().includes(filter)) ||
+          (docRef.date && docRef.date.toLowerCase().includes(filter)) ||
+          (docRef.content[0].attachment.contentType &&
+            docRef.content[0].attachment.contentType.toLowerCase().includes(filter)) ||
+          (docRef.date && this.formatDateString(docRef.date).toLowerCase().includes(filter)) ||
+          sourceType.toLowerCase().includes(filter) ||
+          docCategory.toLowerCase().includes(filter) ||
+          docType.toLowerCase().includes(filter)
+        );
       });
+    },
+    /**
+     * Checks if a DocumentReference includes a CH AllergyIntolerance resource as JSON
+     * @param document  the DocumentReference in question
+     * @returns         true if the content is application/fhir+json and the coding is
+     *                  Snomed CT 722446000 (allergy record)
+     */
+    checkIfIsAllergy(document: DocumentReference): boolean {
+      return (
+        document.content[0].attachment.contentType === 'application/fhir+json' &&
+        document.type !== undefined &&
+        document.type.coding !== undefined &&
+        document.type.coding.findIndex((coding) => {
+          return coding.code === '722446000';
+        }) > -1
+      );
     }
   },
   computed: {
@@ -414,19 +595,18 @@ const DocumentSearch = defineComponent({
     documents(): DocumentReference[] {
       const documents = this.loadedDocuments;
       if (this.$props.addedDocuments) {
-
-        this.$props.addedDocuments.forEach(ad => {
+        this.$props.addedDocuments.forEach((ad) => {
           // check if document already exists, if so replace, otherwise push
-          const index = documents.findIndex(doc => doc.id === ad.id);
+          const index = documents.findIndex((doc) => doc.id === ad.id);
           if (index === -1) {
             documents.push(ad);
           } else {
             documents[index] = ad;
           }
-        })
+        });
       }
 
-      return documents.sort((a,b) => {
+      return documents.sort((a, b) => {
         if (!a.date) return -1;
         if (!b.date) return 1;
         return new Date(b.date).getTime() - new Date(a.date).getTime();
@@ -459,21 +639,21 @@ export default DocumentSearch;
 }
 .ready {
   opacity: 1;
-  color: #4C9F70;
+  color: #4c9f70;
   animation: none !important;
 }
 
 @keyframes pulse {
-	0% {
+  0% {
     opacity: 1;
-	}
+  }
 
-	50% {
+  50% {
     opacity: 0.5;
-	}
+  }
 
-	100% {
+  100% {
     opacity: 1;
-	}
+  }
 }
 </style>

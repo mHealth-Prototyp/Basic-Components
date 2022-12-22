@@ -1,132 +1,211 @@
 <template>
-  <div v-if="translations" class="allergy-view">
+  <div class="allergy-view">
     <div v-if="isAllergy">
       <!-- resource describes an allergy or intolerance -->
-      <div class="allergy-header" v-if="isHeaderNeeded">
-
-        <div class="text-h4 hyphenate" v-if="showTitle">
-          {{  allergyCodeDisplay  }}
+      <div
+        class="allergy-header"
+        v-if="isHeaderNeeded">
+        <div
+          class="text-h4 hyphenate"
+          v-if="showTitle">
+          {{ allergyCodeDisplay }}
         </div>
 
         <div class="header-info">
-          <QBadge v-if="allergy?.clinicalStatus" outline align="middle" class="clinical-status"
+          <QBadge
+            v-if="allergy?.clinicalStatus"
+            outline
+            align="middle"
+            class="clinical-status"
             :color="renderClinicalStateColor">
-            {{  clinicalStateDisplay  }}
+            {{ clinicalStateDisplay }}
           </QBadge>
 
-          <QBadge v-if="allergy?.onsetDateTime" outline align="middle" color="black">
-            {{  dateFormatter.format(new Date(allergy?.onsetDateTime))  }}
+          <QBadge
+            v-if="allergy?.onsetDateTime"
+            outline
+            align="middle"
+            color="black">
+            {{ dateFormatter.format(new Date(allergy?.onsetDateTime)) }}
           </QBadge>
         </div>
 
         <div class="header-info">
-          <QBadge v-if="allergy?.recorder && allergy?.recorder.type && allergy?.recorder.type == 'Practicioner'"
-            align="middle" color="light-blue" text-color="white">
-            <QIcon name="fas fa-user-md" color="white" />
-            {{  allergy?.recorder.display  }}
+          <QBadge
+            v-if="allergy?.recorder && allergy?.recorder.type && allergy?.recorder.type == 'Practitioner'"
+            align="middle"
+            color="light-blue"
+            text-color="white">
+            <QIcon
+              name="fas fa-user-md"
+              color="white" />
+            {{ allergy?.recorder.display }}
           </QBadge>
-          <QBadge v-if="allergy?.recorder && allergy?.recorder.type && allergy?.recorder.type == 'Patient'"
-            align="middle" color="light-green" text-color="white">
-            <QIcon name="fas fa-user" color="white" />
-            {{  allergy?.recorder.display  }}
+          <QBadge
+            v-if="allergy?.recorder && allergy?.recorder.type && allergy?.recorder.type == 'Patient'"
+            align="middle"
+            color="light-green"
+            text-color="white">
+            <QIcon
+              name="fas fa-user"
+              color="white" />
+            {{ allergy?.recorder.display }}
           </QBadge>
         </div>
       </div>
 
-      <div class="row" v-if="allergy?.type">
-        <div class="col-1">{{  translations.typeLabel  }}:</div>
-        <div class="col-2">{{  type  }}</div>
+      <div
+        class="row"
+        v-if="allergy?.type">
+        <div class="col-1">{{ componentTranslations.typeLabel }}:</div>
+        <div class="col-2">{{ type }}</div>
       </div>
 
-      <div class="row" v-if="allergy?.verificationStatus">
-        <div class="col-1">{{  translations.verificationStateLabel  }}:</div>
-        <div class="col-2">{{  verificationStateDisplay  }}</div>
+      <div
+        class="row"
+        v-if="allergy?.verificationStatus">
+        <div class="col-1">{{ componentTranslations.verificationStateLabel }}:</div>
+        <div class="col-2">{{ verificationStateDisplay }}</div>
       </div>
 
-      <div class="row" v-if="allergy?.category">
-        <div class="col-1">{{  translations.categoryLabel  }}:</div>
-        <div class="col-2">{{  renderCategory  }}</div>
+      <div
+        class="row"
+        v-if="allergy?.category">
+        <div class="col-1">{{ componentTranslations.categoryLabel }}:</div>
+        <div class="col-2">{{ renderCategory }}</div>
       </div>
 
-      <div class="row" v-if="allergy?.criticality">
-        <div class="col-1">{{  translations.criticalityLabel  }}:</div>
-        <div class="col-2">{{  renderCriticality  }}</div>
+      <div
+        class="row"
+        v-if="allergy?.criticality">
+        <div class="col-1">{{ componentTranslations.criticalityLabel }}:</div>
+        <div class="col-2">{{ renderCriticality }}</div>
       </div>
 
-      <div class="row" v-if="allergy?.note">
-        <div class="col-1">{{  translations.noteLabel  }}:</div>
-        <div class="col-2">{{  renderNote  }}</div>
+      <div
+        class="row"
+        v-if="allergy?.note">
+        <div class="col-1">{{ componentTranslations.noteLabel }}:</div>
+        <div class="col-2">{{ renderNote }}</div>
       </div>
 
       <div class="row expansion-row">
-        <QExpansionItem v-if="allergy?.reaction && allergy.reaction.length > 0"
-          :label="allergy.reaction.length + ' ' + (allergy.reaction.length === 1 ? translations.reactionLabel : translations.reactionsLabel) + ':'">
-          <QList bordered separator>
-            <QItem v-for="reaction in allergy.reaction" :key="reaction.id" class="reaction-item">
-
+        <QExpansionItem
+          v-if="allergy?.reaction && allergy.reaction.length > 0"
+          :label="
+            allergy.reaction.length +
+            ' ' +
+            (allergy.reaction.length === 1
+              ? componentTranslations.reactionLabel
+              : componentTranslations.reactionsLabel) +
+            ':'
+          ">
+          <QList
+            bordered
+            separator>
+            <QItem
+              v-for="reaction in allergy.reaction"
+              :key="reaction.id"
+              class="reaction-item">
               <template v-if="isReactionManifestationKnown(reaction.manifestation)">
-                <QItemLabel class="reaction-title">{{  renderReactionManifestations(reaction.manifestation)  }}
+                <QItemLabel class="reaction-title"
+                  >{{ renderReactionManifestations(reaction.manifestation) }}
                 </QItemLabel>
               </template>
               <template
-                v-else-if="!isReactionManifestationKnown(reaction.manifestation) && reaction.extension && isReactionLocationAvailable(reaction)">
-                <QItemLabel class="reaction-title">{{  renderReactionLocation(reaction.extension)  }}</QItemLabel>
+                v-else-if="
+                  !isReactionManifestationKnown(reaction.manifestation) &&
+                  reaction.extension &&
+                  isReactionLocationAvailable(reaction)
+                ">
+                <QItemLabel class="reaction-title">{{ renderReactionLocation(reaction.extension) }}</QItemLabel>
               </template>
 
-              <QItemLabel v-if="reaction.onset" caption class="reaction-detail">
-                <div class="reaction-property-name">{{  translations.reactionDateLabel  }}: </div>
-                <div class="reaction-property-value">{{  dateFormatter.format(new Date(reaction.onset))  }}</div>
-              </QItemLabel>
-
-              <QItemLabel v-if="reaction.severity" caption class="reaction-detail">
-                <div class="reaction-property-name">{{  translations.reactionSeverityLabel  }}: </div>
-                <div class="reaction-property-value">{{  renderReactionSeverity(reaction.severity)  }}</div>
-              </QItemLabel>
-
-              <QItemLabel v-if="reaction.substance" caption class="reaction-detail">
-                <div class="reaction-property-name">{{  translations.reactionSubstanceLabel  }}: </div>
-                <div class="reaction-property-value">{{  renderReactionSubstance(reaction.substance)  }}</div>
+              <QItemLabel
+                v-if="reaction.onset"
+                caption
+                class="reaction-detail">
+                <div class="reaction-property-name">{{ componentTranslations.reactionDateLabel }}:</div>
+                <div class="reaction-property-value">{{ dateFormatter.format(new Date(reaction.onset)) }}</div>
               </QItemLabel>
 
               <QItemLabel
-                v-if="isReactionManifestationKnown(reaction.manifestation) && reaction.extension && isReactionLocationAvailable(reaction)"
-                caption class="reaction-detail">
-                <!-- only render if manifestation is also given, otherwise it will be shown twice -->
-                <div class="reaction-property-name">{{  translations.reactionLocationLabel  }}: </div>
-                <div class="reaction-property-value">{{  renderReactionLocation(reaction.extension)  }}</div>
-              </QItemLabel>
-
-              <QItemLabel v-if="reaction.description" caption class="reaction-detail">
-                <div class="reaction-property-name">{{  translations.reactionDescriptionLabel  }}: </div>
-                <div class="reaction-property-value">{{  reaction.description  }}</div>
-              </QItemLabel>
-
-              <QItemLabel v-if="reaction.extension && isExposureDateAvailable(reaction)" caption
+                v-if="reaction.severity"
+                caption
                 class="reaction-detail">
-                <div class="reaction-property-name">{{  translations.exposureDateLabel  }}: </div>
-                <div class="reaction-property-value">{{  renderExposureDate(reaction.extension)  }}</div>
+                <div class="reaction-property-name">{{ componentTranslations.reactionSeverityLabel }}:</div>
+                <div class="reaction-property-value">{{ renderReactionSeverity(reaction.severity) }}</div>
               </QItemLabel>
 
-              <QItemLabel v-if="reaction.exposureRoute" caption class="reaction-detail">
-                <div class="reaction-property-name">{{  translations.exposureRouteLabel  }}: </div>
-                <div class="reaction-property-value">{{  renderExposureRoute(reaction.exposureRoute)  }}</div>
+              <QItemLabel
+                v-if="reaction.substance"
+                caption
+                class="reaction-detail">
+                <div class="reaction-property-name">{{ componentTranslations.reactionSubstanceLabel }}:</div>
+                <div class="reaction-property-value">{{ renderReactionSubstance(reaction.substance) }}</div>
               </QItemLabel>
 
-              <QItemLabel v-if="reaction.note" caption class="reaction-detail">
-                <div class="reaction-property-name">{{  translations.reactionNoteLabel  }}: </div>
-                <div class="reaction-property-value">{{  renderReactionNote(reaction.note)  }}</div>
+              <QItemLabel
+                v-if="
+                  isReactionManifestationKnown(reaction.manifestation) &&
+                  reaction.extension &&
+                  isReactionLocationAvailable(reaction)
+                "
+                caption
+                class="reaction-detail">
+                <!-- only render if manifestation is also given, otherwise it will be shown twice -->
+                <div class="reaction-property-name">{{ componentTranslations.reactionLocationLabel }}:</div>
+                <div class="reaction-property-value">{{ renderReactionLocation(reaction.extension) }}</div>
+              </QItemLabel>
+
+              <QItemLabel
+                v-if="reaction.description"
+                caption
+                class="reaction-detail">
+                <div class="reaction-property-name">{{ componentTranslations.reactionDescriptionLabel }}:</div>
+                <div class="reaction-property-value">{{ reaction.description }}</div>
+              </QItemLabel>
+
+              <QItemLabel
+                v-if="reaction.extension && isExposureDateAvailable(reaction)"
+                caption
+                class="reaction-detail">
+                <div class="reaction-property-name">{{ componentTranslations.exposureDateLabel }}:</div>
+                <div class="reaction-property-value">{{ renderExposureDate(reaction.extension) }}</div>
+              </QItemLabel>
+
+              <QItemLabel
+                v-if="reaction.exposureRoute"
+                caption
+                class="reaction-detail">
+                <div class="reaction-property-name">{{ componentTranslations.exposureRouteLabel }}:</div>
+                <div class="reaction-property-value">{{ renderExposureRoute(reaction.exposureRoute) }}</div>
+              </QItemLabel>
+
+              <QItemLabel
+                v-if="reaction.note"
+                caption
+                class="reaction-detail">
+                <div class="reaction-property-name">{{ componentTranslations.reactionNoteLabel }}:</div>
+                <div class="reaction-property-value">{{ renderReactionNote(reaction.note) }}</div>
               </QItemLabel>
             </QItem>
           </QList>
         </QExpansionItem>
       </div>
 
-      <div v-if="additionalInformation && additionalInformation[languageString]" class="row additional-infos">
-        <p>{{  translations.additionalInformation  }}</p>
+      <div
+        v-if="additionalInformation && additionalInformation[languageString]"
+        class="row additional-infos">
+        <p>{{ componentTranslations.additionalInformation }}</p>
         <ul>
-          <li v-for="info in additionalInformation[languageString]" :key="info.name">
-            <a :href=info.url target="_blank">
-              {{  info.name  }}
+          <li
+            v-for="info in additionalInformation[languageString]"
+            :key="info.name">
+            <a
+              :href="info.url"
+              target="_blank">
+              {{ info.name }}
             </a>
           </li>
         </ul>
@@ -135,84 +214,187 @@
 
     <div v-else>
       <!-- resource describes the negation of an allergy or intolerance -->
-      <div class="allergy-header" v-if="isHeaderNeeded">
-        <div class="text-h4 hyphenate" v-if="showTitle">
-          {{  allergyCodeDisplay  }}
+      <div
+        class="allergy-header"
+        v-if="isHeaderNeeded">
+        <div
+          class="text-h4 hyphenate"
+          v-if="showTitle">
+          {{ allergyCodeDisplay }}
         </div>
 
         <div class="header-info">
-          <QBadge v-if="allergy?.clinicalStatus" outline align="middle" class="clinical-status"
+          <QBadge
+            v-if="allergy?.clinicalStatus"
+            outline
+            align="middle"
+            class="clinical-status"
             :color="renderClinicalStateColor">
-            {{  clinicalStateDisplay  }}
+            {{ clinicalStateDisplay }}
           </QBadge>
 
-          <QBadge v-if="allergy?.onsetDateTime" outline align="middle" color="black">
-            {{  dateFormatter.format(new Date(allergy?.onsetDateTime))  }}
+          <QBadge
+            v-if="allergy?.onsetDateTime"
+            outline
+            align="middle"
+            color="black">
+            {{ dateFormatter.format(new Date(allergy?.onsetDateTime)) }}
           </QBadge>
         </div>
 
         <div class="header-info">
-          <QBadge v-if="allergy?.recorder && allergy?.recorder.type && allergy?.recorder.type == 'Practicioner'"
-            align="middle" color="light-blue" text-color="white">
-            <QIcon name="fas fa-user-md" color="white" />
-            {{  allergy?.recorder.display  }}
+          <QBadge
+            v-if="allergy?.recorder && allergy?.recorder.type && allergy?.recorder.type == 'Practitioner'"
+            align="middle"
+            color="light-blue"
+            text-color="white">
+            <QIcon
+              name="fas fa-user-md"
+              color="white" />
+            {{ allergy?.recorder.display }}
           </QBadge>
-          <QBadge v-if="allergy?.recorder && allergy?.recorder.type && allergy?.recorder.type == 'Patient'"
-            align="middle" color="light-green" text-color="white">
-            <QIcon name="fas fa-user" color="white" />
-            {{  allergy?.recorder.display  }}
+          <QBadge
+            v-if="allergy?.recorder && allergy?.recorder.type && allergy?.recorder.type == 'Patient'"
+            align="middle"
+            color="light-green"
+            text-color="white">
+            <QIcon
+              name="fas fa-user"
+              color="white" />
+            {{ allergy?.recorder.display }}
           </QBadge>
         </div>
       </div>
 
-      <div class="row" v-if="allergy?.verificationStatus">
-        <div class="col-1">{{  translations.verificationStateLabel  }}:</div>
-        <div class="col-2">{{  verificationStateDisplay  }}</div>
+      <div
+        class="row"
+        v-if="allergy?.verificationStatus">
+        <div class="col-1">{{ componentTranslations.verificationStateLabel }}:</div>
+        <div class="col-2">{{ verificationStateDisplay }}</div>
       </div>
 
-      <div class="row" v-if="allergy?.note">
-        <div class="col-1">{{  translations.noteLabel  }}:</div>
-        <div class="col-2">{{  renderNote  }}</div>
+      <div
+        class="row"
+        v-if="allergy?.note">
+        <div class="col-1">{{ componentTranslations.noteLabel }}:</div>
+        <div class="col-2">{{ renderNote }}</div>
       </div>
     </div>
 
-    <div class="data-info" v-if="!isEnoughDataAvailable">
-      <p>{{  translations.noOtherDataAvailable  }}</p>
+    <div
+      class="data-info"
+      v-if="!isEnoughDataAvailable">
+      <p>{{ componentTranslations.noOtherDataAvailable }}</p>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from 'vue';
-import { AllergyViewTranslationStrings } from '../TranslationInterfaces';
-import FhirUtils, { CHAllergyIntolerance, FhirUtilLanguageType, OPENEHR_EXPOSURE_DATE_URL, OPENEHR_EXPOSURE_LOCATION_URL } from '../utils/fhirUtils';
+import {defineComponent, PropType} from 'vue';
+import {AllergyViewTranslationStrings} from '../TranslationInterfaces';
+import FhirUtils, {
+  CHAllergyIntolerance,
+  FhirUtilLanguageType,
+  OPENEHR_EXPOSURE_DATE_URL,
+  OPENEHR_EXPOSURE_LOCATION_URL
+} from '../utils/fhirUtils';
 import EpdPlaygroundUtils from '../utils/epdPlaygroundUtils';
-import { AllergyIdentificationType, AllergySystemCodeExtension, ALLERGY_IDENTIFICATION_CODES, CATEGORY_CODES, CLINICAL_STATUS_CODES, CRITICALITY_CODES, EXPOSURE_PATH_CODES, getAllergyIdentificationCodesByType, REACTION_MANIFESTATION_CODES, REACTION_SEVERITY_CODES, REACTION_SUBSTANCE_CODES, VERIFICATION_STATUS_CODES } from '../utils/allergyCodes';
-import { AllergyIntoleranceReaction, AllergyIntoleranceSeverity, AllergyIntoleranceType, Annotation, CodeableConcept, Extension } from '@i4mi/fhir_r4';
-import { QExpansionItem, QList, QItem, QItemLabel, QBadge, QIcon } from 'quasar';
+import {
+  AllergyIdentificationType,
+  ALLERGY_IDENTIFICATION_CODES,
+  CATEGORY_CODES,
+  CLINICAL_STATUS_CODES,
+  CRITICALITY_CODES,
+  EXPOSURE_PATH_CODES,
+  getAllergyIdentificationCodesByType,
+  REACTION_MANIFESTATION_CODES,
+  REACTION_SEVERITY_CODES,
+  REACTION_SUBSTANCE_CODES,
+  VERIFICATION_STATUS_CODES
+} from '../utils/allergyCodes';
+import {
+  AllergyIntoleranceReaction,
+  AllergyIntoleranceSeverity,
+  AllergyIntoleranceType,
+  Annotation,
+  CodeableConcept,
+  Extension
+} from '@i4mi/fhir_r4';
+import {QExpansionItem, QList, QItem, QItemLabel, QBadge, QIcon} from 'quasar';
+import * as DE from '../assets/de.json';
+import * as FR from '../assets/fr.json';
+
+// Intstantiate class of interface to iterate translation keys
+class AllergyViewTranslations implements AllergyViewTranslationStrings {
+  allergy = '';
+  intolerance = '';
+  typeLabel = '';
+  verificationStateLabel = '';
+  reactionLabel = '';
+  reactionsLabel = '';
+  reactionDateLabel = '';
+  reactionSeverityLabel = '';
+  reactionSubstanceLabel = '';
+  reactionDescriptionLabel = '';
+  reactionLocationLabel = '';
+  additionalInformation = '';
+  categoryLabel = '';
+  criticalityLabel = '';
+  noteLabel = '';
+  exposureDateLabel = '';
+  exposureRouteLabel = '';
+  reactionNoteLabel = '';
+  noOtherDataAvailable = '';
+}
 
 /**
  * Displays data of an AllergyIntolerance resource.
  */
 export default defineComponent({
   name: 'AllergyView',
-  components: { QExpansionItem, QList, QItem, QItemLabel, QBadge, QIcon },
+  components: {QExpansionItem, QList, QItem, QItemLabel, QBadge, QIcon},
   data() {
     return {
-      isAllergy: false,             // false if allergy data describes an absence of an allergy
+      isAllergy: false, // false if allergy data describes an absence of an allergy
       allergy: undefined as CHAllergyIntolerance | undefined,
-                                    // allergy intolerance resource to display
+      // allergy intolerance resource to display
       allergyCode: undefined as string | undefined,
-                                    // code of the allergy
-      additionalInformation: undefined as {  // additional information about allergy
-                            [lang: string]: { 
-                              name: string; 
-                              url: string
-                            }[]
-                          } | undefined,       
-      dateFormatter: new Intl.DateTimeFormat(this.languageString)
-                                    // helper for formating date according to locale
+      // code of the allergy
+      additionalInformation: undefined as
+        | {
+            // additional information about allergy
+            [lang: string]: {
+              name: string;
+              url: string;
+            }[];
+          }
+        | undefined,
+      dateFormatter: new Intl.DateTimeFormat(this.languageString),
+      // helper for formating date according to locale
+      componentTranslations: new AllergyViewTranslations()
+      // contains default translations from library but can be oberwritten individually via translations prop
     };
+  },
+  i18n: {
+    // default translations for this component
+    messages: {
+      'de-CH': Object.assign({}, DE.allergyView, {
+        typeLabel: DE.common.type,
+        reactionLabel: DE.common.reaction,
+        reactionSubstanceLabel: DE.common.substance,
+        reactionDescriptionLabel: DE.common.description,
+        categoryLabel: DE.common.category,
+        criticalityLabel: DE.common.criticality
+      }),
+      'fr-CH': Object.assign({}, FR.allergyView, {
+        typeLabel: FR.common.type,
+        reactionLabel: FR.common.reaction,
+        reactionSubstanceLabel: FR.common.substance,
+        reactionDescriptionLabel: FR.common.description,
+        categoryLabel: FR.common.category,
+        criticalityLabel: FR.common.criticality
+      })
+    }
   },
   props: {
     /**
@@ -231,12 +413,12 @@ export default defineComponent({
       required: false
     },
     /**
-     * Strings for displaying on the page.
+     * Strings to overwrite default translations of component. Oberwrite by individual keys is supported.
      * @see   AllergyViewTranslationStrings interface for details
      */
     translations: {
       type: Object as PropType<AllergyViewTranslationStrings>,
-      required: true
+      required: false
     },
     /**
      * Two-character representation for the current language. Must be one of
@@ -261,21 +443,31 @@ export default defineComponent({
       required: true
     }
   },
-  emits: {
-  },
+  emits: {},
   beforeMount() {
     this.allergy = this.allergyIntolerance;
 
-    if (this.allergy && this.allergy.code && this.allergy.code.coding && this.allergy.code.coding.length > 0 && this.allergy.code.coding[0].code) {
-
+    if (
+      this.allergy &&
+      this.allergy.code &&
+      this.allergy.code.coding &&
+      this.allergy.code.coding.length > 0 &&
+      this.allergy.code.coding[0].code
+    ) {
       // set code and display
       this.allergyCode = this.allergy.code.coding[0].code;
 
       // check for additional information
-      this.additionalInformation = ALLERGY_IDENTIFICATION_CODES.find(codeEntry => codeEntry.defaultCoding.code == this.allergyCode)?.additionalInformation;
+      this.additionalInformation = ALLERGY_IDENTIFICATION_CODES.find(
+        (codeEntry) => codeEntry.defaultCoding.code == this.allergyCode
+      )?.additionalInformation;
 
       // check if we have a allergy absence entry
-      if (getAllergyIdentificationCodesByType([AllergyIdentificationType.SITUATION]).find(code => code.defaultCoding.code == this.allergyCode)) {
+      if (
+        getAllergyIdentificationCodesByType([AllergyIdentificationType.SITUATION]).find(
+          (code) => code.defaultCoding.code == this.allergyCode
+        )
+      ) {
         this.isAllergy = false;
       } else {
         this.isAllergy = true;
@@ -283,8 +475,31 @@ export default defineComponent({
     } else {
       console.warn('AllergyIntolerance resource is missing code property.');
     }
+
+    this.setupTranslations();
   },
   methods: {
+    /**
+     * Iterates over translation keys, sets default translation or set from prop.
+     */
+    setupTranslations() {
+      let defaultTranslations = this.componentTranslations;
+
+      for (let i in defaultTranslations) {
+        if (defaultTranslations.hasOwnProperty(i)) {
+          type ObjectKey = keyof typeof defaultTranslations;
+          const translationKey = i as ObjectKey;
+
+          if (this.translations && this.translations[translationKey]) {
+            // there is a translation from prop
+            this.componentTranslations[translationKey] = this.translations[translationKey];
+          } else {
+            // we take default translation
+            this.componentTranslations[translationKey] = this.$t(translationKey);
+          }
+        }
+      }
+    },
     /**
      * Returns true if no manifestation has display Unknown.
      * @param manifestations manifestations of the reaction
@@ -292,8 +507,14 @@ export default defineComponent({
     isReactionManifestationKnown(manifestations: CodeableConcept[]): boolean {
       if (manifestations && manifestations.length > 0) {
         let isKnown = true;
-        manifestations.forEach(manifestation => {
-          if (manifestation && manifestation.coding && manifestation.coding.length > 0 && manifestation.coding[0].display && manifestation.coding[0].display == 'Unknown') {
+        manifestations.forEach((manifestation) => {
+          if (
+            manifestation &&
+            manifestation.coding &&
+            manifestation.coding.length > 0 &&
+            manifestation.coding[0].display &&
+            manifestation.coding[0].display == 'Unknown'
+          ) {
             isKnown = false;
           }
         });
@@ -309,9 +530,16 @@ export default defineComponent({
     renderReactionManifestations(manifestations: CodeableConcept[]): string {
       if (manifestations && manifestations.length > 0) {
         let text = '';
-        manifestations.forEach(manifestation => {
+        manifestations.forEach((manifestation) => {
           if (manifestation.coding && manifestation.coding.length > 0 && manifestation.coding[0].code) {
-            text = text + this.fhirUtils.getDisplayByCodeAndLanguage(manifestation.coding[0].code, REACTION_MANIFESTATION_CODES, this.languageString) + ', '
+            text =
+              text +
+              this.fhirUtils.getDisplayByCodeAndLanguage(
+                manifestation.coding[0].code,
+                REACTION_MANIFESTATION_CODES,
+                this.languageString
+              ) +
+              ', ';
           }
         });
         if (text.length > 0) {
@@ -337,7 +565,11 @@ export default defineComponent({
      */
     renderReactionSubstance(substance: CodeableConcept): string {
       if (substance && substance.coding && substance.coding.length > 0 && substance.coding[0].code) {
-        return this.fhirUtils.getDisplayByCodeAndLanguage(substance.coding[0].code, REACTION_SUBSTANCE_CODES, this.languageString);
+        return this.fhirUtils.getDisplayByCodeAndLanguage(
+          substance.coding[0].code,
+          REACTION_SUBSTANCE_CODES,
+          this.languageString
+        );
       }
       return '?';
     },
@@ -346,7 +578,7 @@ export default defineComponent({
      * @param extensions extensions of a reaction
      */
     renderExposureDate(extensions: Extension[]): string {
-      const exposureDate = extensions?.find(extension => extension.url == OPENEHR_EXPOSURE_DATE_URL);
+      const exposureDate = extensions?.find((extension) => extension.url == OPENEHR_EXPOSURE_DATE_URL);
       if (exposureDate && exposureDate.valueDateTime && exposureDate.valueDateTime.length > 0) {
         let dateCheck = new Date(exposureDate.valueDateTime);
         if (dateCheck instanceof Date && !Number.isNaN(dateCheck.valueOf())) {
@@ -361,7 +593,7 @@ export default defineComponent({
      */
     isExposureDateAvailable(reaction: AllergyIntoleranceReaction): boolean {
       const extensions = reaction.extension;
-      const exposureDate = extensions?.find(extension => extension.url == OPENEHR_EXPOSURE_DATE_URL);
+      const exposureDate = extensions?.find((extension) => extension.url == OPENEHR_EXPOSURE_DATE_URL);
       if (exposureDate && exposureDate.valueDateTime && exposureDate.valueDateTime.length > 0) {
         let dateCheck = new Date(exposureDate.valueDateTime);
         if (dateCheck instanceof Date && !Number.isNaN(dateCheck.valueOf())) {
@@ -377,7 +609,7 @@ export default defineComponent({
     renderExposureRoute(route: CodeableConcept): string {
       if (route && route.coding && route.coding.length > 0 && route.coding[0].code) {
         const code = route.coding[0].code;
-        const exposure = EXPOSURE_PATH_CODES.find(coding => coding.code == code);
+        const exposure = EXPOSURE_PATH_CODES.find((coding) => coding.code == code);
         if (exposure && exposure.display) {
           // no translation because codes don't have an official translation
           return exposure.display;
@@ -392,7 +624,7 @@ export default defineComponent({
     renderReactionNote(notes: Annotation[]): string {
       if (notes && notes.length > 0) {
         let text = '';
-        notes.forEach(note => {
+        notes.forEach((note) => {
           text = text + note.text + ', ';
         });
         if (text.length > 0) {
@@ -408,10 +640,15 @@ export default defineComponent({
      */
     isReactionLocationAvailable(reaction: AllergyIntoleranceReaction): boolean {
       const extensions = reaction.extension;
-      const exposureLocation = extensions?.find(extension => extension.url == OPENEHR_EXPOSURE_LOCATION_URL);
+      const exposureLocation = extensions?.find((extension) => extension.url == OPENEHR_EXPOSURE_LOCATION_URL);
       if (exposureLocation && exposureLocation.valueCodeableConcept) {
         const locationCoding = exposureLocation.valueCodeableConcept;
-        if (locationCoding.coding && locationCoding.coding.length > 0 && locationCoding.coding[0].display && locationCoding.coding[0].display.length > 0) {
+        if (
+          locationCoding.coding &&
+          locationCoding.coding.length > 0 &&
+          locationCoding.coding[0].display &&
+          locationCoding.coding[0].display.length > 0
+        ) {
           return true;
         }
       }
@@ -422,7 +659,7 @@ export default defineComponent({
      * @param extensions extensions of a reaction
      */
     renderReactionLocation(extensions: Extension[]): string {
-      const exposureLocation = extensions?.find(extension => extension.url == OPENEHR_EXPOSURE_LOCATION_URL);
+      const exposureLocation = extensions?.find((extension) => extension.url == OPENEHR_EXPOSURE_LOCATION_URL);
       if (exposureLocation && exposureLocation.valueCodeableConcept) {
         const locationCoding = exposureLocation.valueCodeableConcept;
         if (locationCoding.coding && locationCoding.coding.length > 0 && locationCoding.coding[0].display) {
@@ -440,9 +677,9 @@ export default defineComponent({
     type(): string {
       if (this.allergy?.type) {
         if (this.allergy.type == AllergyIntoleranceType.ALLERGY) {
-          return this.translations.allergy;
+          return this.componentTranslations.allergy;
         } else if (this.allergy.type == AllergyIntoleranceType.INTOLERANCE) {
-          return this.translations.intolerance;
+          return this.componentTranslations.intolerance;
         }
       }
       return '?';
@@ -452,7 +689,11 @@ export default defineComponent({
      */
     allergyCodeDisplay(): string {
       if (this.allergyCode) {
-        return this.fhirUtils.getDisplayByCodeAndLanguage(this.allergyCode, ALLERGY_IDENTIFICATION_CODES, this.languageString);
+        return this.fhirUtils.getDisplayByCodeAndLanguage(
+          this.allergyCode,
+          ALLERGY_IDENTIFICATION_CODES,
+          this.languageString
+        );
       } else {
         return '?';
       }
@@ -461,8 +702,17 @@ export default defineComponent({
      * Returns translated clinical state of allergy.
      */
     clinicalStateDisplay(): string {
-      if (this.allergy?.clinicalStatus && this.allergy.clinicalStatus.coding && this.allergy.clinicalStatus.coding.length > 0 && this.allergy.clinicalStatus.coding[0].code) {
-        return this.fhirUtils.getDisplayByCodeAndLanguage(this.allergy.clinicalStatus.coding[0].code, CLINICAL_STATUS_CODES, this.languageString);
+      if (
+        this.allergy?.clinicalStatus &&
+        this.allergy.clinicalStatus.coding &&
+        this.allergy.clinicalStatus.coding.length > 0 &&
+        this.allergy.clinicalStatus.coding[0].code
+      ) {
+        return this.fhirUtils.getDisplayByCodeAndLanguage(
+          this.allergy.clinicalStatus.coding[0].code,
+          CLINICAL_STATUS_CODES,
+          this.languageString
+        );
       } else {
         return '?';
       }
@@ -471,8 +721,17 @@ export default defineComponent({
      * Returns translated verification state of allergy.
      */
     verificationStateDisplay(): string {
-      if (this.allergy?.verificationStatus && this.allergy.verificationStatus.coding && this.allergy.verificationStatus.coding.length > 0 && this.allergy.verificationStatus.coding[0].code) {
-        return this.fhirUtils.getDisplayByCodeAndLanguage(this.allergy.verificationStatus.coding[0].code, VERIFICATION_STATUS_CODES, this.languageString);
+      if (
+        this.allergy?.verificationStatus &&
+        this.allergy.verificationStatus.coding &&
+        this.allergy.verificationStatus.coding.length > 0 &&
+        this.allergy.verificationStatus.coding[0].code
+      ) {
+        return this.fhirUtils.getDisplayByCodeAndLanguage(
+          this.allergy.verificationStatus.coding[0].code,
+          VERIFICATION_STATUS_CODES,
+          this.languageString
+        );
       } else {
         return '?';
       }
@@ -489,10 +748,10 @@ export default defineComponent({
             return 'red-7';
 
           case 'inactive':
-            return 'orange-12'
+            return 'orange-12';
 
           case 'resolved':
-            return 'green-7'
+            return 'green-7';
 
           default:
             return 'primary';
@@ -506,10 +765,11 @@ export default defineComponent({
      */
     renderCategory(): string {
       const categories = this.allergy?.category;
-      let text = ''
+      let text = '';
       if (categories && categories.length > 0) {
-        categories.forEach(category => {
-          text = text + this.fhirUtils.getDisplayByCodeAndLanguage(category, CATEGORY_CODES, this.languageString) + ', ';
+        categories.forEach((category) => {
+          text =
+            text + this.fhirUtils.getDisplayByCodeAndLanguage(category, CATEGORY_CODES, this.languageString) + ', ';
         });
         if (text.length > 0) {
           // remove last comma
@@ -522,7 +782,7 @@ export default defineComponent({
      * Returns translated criticality of allergy.
      */
     renderCriticality() {
-      const criticality = this.allergy?.criticality
+      const criticality = this.allergy?.criticality;
       if (criticality) {
         return this.fhirUtils.getDisplayByCodeAndLanguage(criticality, CRITICALITY_CODES, this.languageString);
       }
@@ -535,7 +795,7 @@ export default defineComponent({
       const notes = this.allergy?.note;
       if (notes && notes.length > 0) {
         let text = '';
-        notes.forEach(note => {
+        notes.forEach((note) => {
           text = text + note.text + ', ';
         });
         if (text.length > 0) {
@@ -695,7 +955,6 @@ ul {
 .reaction-property-value {
   width: 70%;
 }
-
 
 .data-info,
 .additional-infos {

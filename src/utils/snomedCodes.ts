@@ -1,4 +1,4 @@
-import { SystemCodeExtension } from "./fhirUtils";
+import {SystemCodeExtension} from './fhirUtils';
 
 /**
  * Class codes according to DocumentEntry.classCode definition:

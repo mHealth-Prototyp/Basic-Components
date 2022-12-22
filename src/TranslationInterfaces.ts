@@ -8,7 +8,7 @@ export interface DocumentSearchTranslationStrings {
   kiloByteLabel: string;
   megaByteLabel: string;
   fetchMpiLabel: string;
-  mpiLabel: string;
+  fetchedMpiLabel: string;
   fetchMetadataLabel: string;
   fetchingError: string;
   searchLabel: string;
@@ -28,20 +28,20 @@ export interface DocumentSearchTranslationStrings {
  */
 export interface DocumentUploadTranslationStrings {
   titleLabel: string;
+  titleInputLabel: string;
+  titleAndDescription: string;
+  descriptionText: string;
+  descriptionInputLabel: string;
   selectFileText: string;
+  selectFile: string;
   metadata: string;
   metadataText: string;
-  titleInputLabel: string;
-  descriptionInputLabel: string;
   uploadButtonLabel: string;
   cancelButtonLabel: string;
   categoryLabel: string;
   typeLabel: string;
-  selectFile: string;
-  titleAndDescription: string;
-  descriptionText: string;
-  languageText: string;
   language: string;
+  languageText: string;
   fileTypeText: string;
   typeNotSufficient: string;
   creatingInstitution: string;
@@ -61,7 +61,7 @@ export interface DocumentUploadTranslationStrings {
  */
 export interface LocalPatientsListTranslationStrings {
   titleLabel: string;
-  givenLabel: string;
+  givenNameLabel: string;
   familyLabel: string;
   birthdateLabel: string;
   genderLabel: string;
@@ -80,7 +80,7 @@ export interface LocalPatientsListTranslationStrings {
  */
 export interface PatientSearchTranslationStrings {
   nameInputLabel: string;
-  givenInputLabel: string;
+  givenNameInputLabel: string;
   birthdayInputLabel: string;
   genderInputLabel: string;
   idInputLabel: string;
@@ -104,12 +104,11 @@ export interface PatientSearchTranslationStrings {
  */
 export interface PatientViewTranslationStrings {
   nameLabel: string;
-  givenLabel: string;
+  givenNameLabel: string;
   genderLabel: string;
   birthdateLabel: string;
   identifiersLabel: string;
   localIdLabel: string;
-  mpiIdLabel: string;
   eprSpidLabel: string;
   addressLabel: string;
   streetLabel: string;
@@ -119,17 +118,25 @@ export interface PatientViewTranslationStrings {
   femaleGender: string;
   otherGender: string;
   unknownGender: string;
-  editButtonLabel?: string;
-  saveButtonLabel?: string;
-  cancelButtonLabel?: string;
-  uploadError: string;
-  uploadSuccess: string;
+  editButtonLabel: string;
+  saveButtonLabel: string;
+  cancelButtonLabel: string;
+  editUploadError: string;
+  editUploadSuccess: string;
   openPrompt1: string;
   openPrompt2: string;
-  addDocumentButton: string;
+  addDocumentButtonLabel: string;
   uploadSuccessful: string;
   uploadUnsuccessful: string;
   addAllergyButton: string;
+  editAllergyButton: string;
+  documentViewTitle: string;
+}
+
+/**
+ * Defines strings of child components in the PatientView component.
+ */
+export interface PatientViewChildComponentsTranslationString {
   documentSearchStrings: DocumentSearchTranslationStrings;
   documentUploadStrings: DocumentUploadTranslationStrings;
   allergyUploadStrings: AllergyUploadTranslationStrings;
@@ -145,7 +152,7 @@ export interface RegisterPatientTranslationStrings {
   titleText: string;
   familyLabel: string;
   genderLabel: string;
-  givenLabel: string;
+  givenNameLabel: string;
   birthdateLabel: string;
   addressLabel: string;
   streetLabel: string;
@@ -153,7 +160,7 @@ export interface RegisterPatientTranslationStrings {
   zipLabel: string;
   stateLabel: string;
   identifiersLabel: string;
-  localIdLabel: string;
+  localPidLabel: string;
   ahvLabel: string;
   maleGender: string;
   femaleGender: string;
@@ -181,7 +188,6 @@ export interface AllergyUploadTranslationStrings {
   clinicalStatusTooltip: string;
   verificationStatus: string;
   verificationStatusTooltip: string;
-  identificationDate: string;
   comment: string;
   cancelButtonLabel: string;
   uploadButtonLabel: string;
@@ -209,6 +215,7 @@ export interface AllergyUploadTranslationStrings {
   addEpisodeButtonLabel: string;
   updateEpisodeButtonLabel: string;
   deleteEpisodeButtonLabel: string;
+  saveEpisodeButtonLabel: string;
   reaction: string;
   reactionSubstanceTooltip: string;
   certainty: string;
@@ -218,7 +225,6 @@ export interface AllergyUploadTranslationStrings {
   exposurePath: string;
   exposurePathTooltip: string;
   episodeComment: string;
-  saveEpisode: string;
   creatingInstitution: string;
   creatingInstitutionText: string;
   institution: string;
@@ -228,6 +234,7 @@ export interface AllergyUploadTranslationStrings {
   fieldRequired: string;
   allergicFor: string;
   positiveValuesAllowed: string;
+  allergyUpdateNotSupported: string;
 }
 
 /**
@@ -239,9 +246,6 @@ export interface AllergyViewTranslationStrings {
   allergy: string;
   intolerance: string;
   typeLabel: string;
-  codeDisplayLabel: string;
-  dateLabel: string;
-  clinicalStateLabel: string;
   verificationStateLabel: string;
   reactionLabel: string;
   reactionsLabel: string;
@@ -258,4 +262,16 @@ export interface AllergyViewTranslationStrings {
   exposureRouteLabel: string;
   reactionNoteLabel: string;
   noOtherDataAvailable: string;
+}
+
+/**
+ * Defines the strings displayed in the DocumentView component.
+ * Used this way to be independent from different i18n systems.
+ */
+export interface DocumentViewTranslationStrings {
+  noDocument: string;
+  isNotDocument: string;
+  noSubjectNarrative: string;
+  noCompositionNarrative: string;
+  noSectionNarrative: string;
 }

@@ -1,39 +1,93 @@
-import { Identifier, Organization, Patient, PatientAdministrativeGender } from '@i4mi/fhir_r4';
-import { Oids } from './epdPlaygroundUtils';
-
+import {Identifier, Organization, Patient, PatientAdministrativeGender} from '@i4mi/fhir_r4';
+import {Oids} from './epdPlaygroundUtils';
 
 // TODO: enhance for french and italian part of Switzerland ;-)
 const SAMPLE_GIVEN_M = [
-  'Daniel', 'Peter', 'Thomas',
-  'Hans', 'Christian', 'Martin',
-  'Andreas', 'Michael', 'Markus',
-  'Marco', 'David', 'Patrick',
-  'Stefan', 'Bruno', 'Urs',
-  'Walter', 'René', 'Marcel',
-  'Roland', 'Simon']; // most common male first names in Switzerland
+  'Daniel',
+  'Peter',
+  'Thomas',
+  'Hans',
+  'Christian',
+  'Martin',
+  'Andreas',
+  'Michael',
+  'Markus',
+  'Marco',
+  'David',
+  'Patrick',
+  'Stefan',
+  'Bruno',
+  'Urs',
+  'Walter',
+  'René',
+  'Marcel',
+  'Roland',
+  'Simon'
+]; // most common male first names in Switzerland
 const SAMPLE_GIVEN_F = [
-  'Maria', 'Anna', 'Sandra',
-  'Ursula', 'Elisabeth', 'Ruth',
-  'Monika', 'Claudia', 'Nicole',
-  'Verena', 'Barbara', 'Andrea',
-  'Silvia', 'Daniela', 'Marie',
-  'Christine', 'Karin', 'Marianne',
-  'Laura', 'Sarah']; // most common female first names in Switzerland
+  'Maria',
+  'Anna',
+  'Sandra',
+  'Ursula',
+  'Elisabeth',
+  'Ruth',
+  'Monika',
+  'Claudia',
+  'Nicole',
+  'Verena',
+  'Barbara',
+  'Andrea',
+  'Silvia',
+  'Daniela',
+  'Marie',
+  'Christine',
+  'Karin',
+  'Marianne',
+  'Laura',
+  'Sarah'
+]; // most common female first names in Switzerland
 const SAMPLE_GIVEN_O = [
-  'Sasha', 'Kim', 'Toni', 'Kay', 'Finn', 'Nikita' // some gender neutral names
+  'Sasha',
+  'Kim',
+  'Toni',
+  'Kay',
+  'Finn',
+  'Nikita' // some gender neutral names
 ];
 const SAMPLE_FAMILY = [
-  'Müller', 'Meier', 'Schmid',
-  'Keller', 'Weber', 'Huber',
-  'Schneider', 'Meyer', 'Steiner',
-  'Fischer', 'Gerber', 'Brunner',
-  'Baumann', 'Frei', 'Zimmermann',
-  'Moser', 'Widmer', 'Wyss',
-  'Graf', 'Roth']; // most common family names in Switzerland
+  'Müller',
+  'Meier',
+  'Schmid',
+  'Keller',
+  'Weber',
+  'Huber',
+  'Schneider',
+  'Meyer',
+  'Steiner',
+  'Fischer',
+  'Gerber',
+  'Brunner',
+  'Baumann',
+  'Frei',
+  'Zimmermann',
+  'Moser',
+  'Widmer',
+  'Wyss',
+  'Graf',
+  'Roth'
+]; // most common family names in Switzerland
 const SAMPLE_STREETS = [
-  'Dorfstrasse', 'Hauptstrasse', 'Bahnhofstrasse', 'Birkenweg',
-  'Schulstrasse', 'Oberdorfstrasse', 'Kirchweg', 'Industriestrasse',
-  'Schulhausstrasse', 'Rosenweg' ]; // most common street names in Switzerland
+  'Dorfstrasse',
+  'Hauptstrasse',
+  'Bahnhofstrasse',
+  'Birkenweg',
+  'Schulstrasse',
+  'Oberdorfstrasse',
+  'Kirchweg',
+  'Industriestrasse',
+  'Schulhausstrasse',
+  'Rosenweg'
+]; // most common street names in Switzerland
 const SAMPLE_CITIES = [
   {
     name: 'Zürich',
@@ -139,7 +193,6 @@ const SAMPLE_CITIES = [
   }
 ]; // some cities in (german speaking) Switzerland
 
-
 export default class PatientUtils {
   oids: Oids;
   organization: Organization;
@@ -149,38 +202,37 @@ export default class PatientUtils {
   }
 
   private getRandomGiven(gender: PatientAdministrativeGender): string {
-    switch(gender) {
+    switch (gender) {
       case PatientAdministrativeGender.MALE:
         return SAMPLE_GIVEN_M[Math.floor(Math.random() * SAMPLE_GIVEN_M.length)];
       case PatientAdministrativeGender.FEMALE:
         return SAMPLE_GIVEN_F[Math.floor(Math.random() * SAMPLE_GIVEN_F.length)];
       default:
-        return SAMPLE_GIVEN_O[Math.floor(Math.random() * SAMPLE_GIVEN_O.length)];;
+        return SAMPLE_GIVEN_O[Math.floor(Math.random() * SAMPLE_GIVEN_O.length)];
     }
   }
-  
+
   private getRandomFamily(): string {
     return SAMPLE_FAMILY[Math.floor(Math.random() * SAMPLE_FAMILY.length)];
   }
-  
+
   private getRandomBirthDate(): string {
     const start = new Date('1920-01-01');
     const end = new Date('2009-12-31');
-  
-    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()))
-      .toISOString()
-      .substring(0,10);
+
+    return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime())).toISOString().substring(0, 10);
   }
-  
-  private getRandomCity(): {name: string, zip: string, state: string} {
+
+  private getRandomCity(): {name: string; zip: string; state: string} {
     return SAMPLE_CITIES[Math.floor(Math.random() * SAMPLE_CITIES.length)];
   }
-  
+
   private getRandomStreet(): string {
-    return SAMPLE_STREETS[Math.floor(Math.random() * SAMPLE_STREETS.length)] +
-           ' ' + Math.ceil((Math.random() * 10)).toString();
+    return (
+      SAMPLE_STREETS[Math.floor(Math.random() * SAMPLE_STREETS.length)] + ' ' + Math.ceil(Math.random() * 10).toString()
+    );
   }
-  
+
   /**
    * Randomly returns a PatientAdministrative gender, with following distribution:
    *    - male: 47%
@@ -192,14 +244,14 @@ export default class PatientUtils {
     const rand = Math.random();
     switch (true) {
       case rand < 0.47:
-        return PatientAdministrativeGender.MALE
+        return PatientAdministrativeGender.MALE;
       case rand < 0.95:
-        return PatientAdministrativeGender.FEMALE
+        return PatientAdministrativeGender.FEMALE;
       default:
-        return PatientAdministrativeGender.OTHER
+        return PatientAdministrativeGender.OTHER;
     }
   }
-  
+
   /**
    * Generates a pseudo EPR SPID from a given id.
    * @param   id: an unique input as base for generating the EPR SPID,
@@ -209,26 +261,24 @@ export default class PatientUtils {
    * @throws      an Error if the given id does not have exactly 9 digits
    */
   public generateEprSpid(id: string): string {
-    if (id.length !== 9) {
+    if (id.length !== 9 || !id.match('^[0-9]*$')) {
       throw new Error('ID must be exactly 9 digits. (is: ' + id + ')');
     }
     const COUNTRY_CODE_CH = '76';
     const PARTICIPANT_CODE_BAG = '13376';
     const PURPOSE_CODE_EPD = '1';
     let spid = COUNTRY_CODE_CH + PARTICIPANT_CODE_BAG + PURPOSE_CODE_EPD + id;
-  
+
     // calculate checksum according to
     // https://www.fedlex.admin.ch/eli/cc/2017/205/de#annex_1
     let sum = 0;
     for (let i = spid.length - 1; i >= 0; i--) {
-      sum += (i % 2 === 0)
-        ? parseInt(spid[i]) * 3
-        : parseInt(spid[i])
+      sum += i % 2 === 0 ? parseInt(spid[i]) * 3 : parseInt(spid[i]);
     }
     spid += (10 - (sum % 10)) % 10;
     return spid.toString();
   }
-  
+
   /**
    * Generates a random AHV number.
    * @returns       AHV number as Identifier with AHV OID
@@ -237,23 +287,21 @@ export default class PatientUtils {
     const numbers = new Array<number>();
     let checksum = 28; // checksum for the 756 part
     let numberString = '756.';
-    for(let i = 0; i < 9; i++) {
+    for (let i = 0; i < 9; i++) {
       const digit = Math.floor(Math.random() * 9.999);
       numbers.push(digit);
       numberString += digit.toString();
       if (i === 3 || i === 7) {
         numberString += '.';
       }
-      checksum += (i % 2 === 0)
-        ? 3 * digit
-        : digit;
+      checksum += i % 2 === 0 ? 3 * digit : digit;
     }
     return {
       system: this.oids.ahv,
       value: numberString + ((10 - (checksum % 10)) % 10).toString()
-    }
+    };
   }
-  
+
   /**
    * Creates a random patient, based on the data above.
    * @returns   a Patient resource with typical swiss data,
@@ -261,7 +309,10 @@ export default class PatientUtils {
    *            as managing organization.
    */
   public generateRandomPatient(): Patient {
-    const patID =  Date.now().toString().substring(6,13) + Math.floor(Math.random() * 10).toString() + Math.floor(Math.random() * 10).toString();
+    const patID =
+      Date.now().toString().substring(6, 13) +
+      Math.floor(Math.random() * 10).toString() +
+      Math.floor(Math.random() * 10).toString();
     const patGender = this.getRandomGender();
     const city = this.getRandomCity();
     this.organization.id = this.organization.id || '1';
@@ -285,25 +336,21 @@ export default class PatientUtils {
       name: [
         {
           family: this.getRandomFamily(),
-          given: [
-            this.getRandomGiven(patGender)
-          ]
+          given: [this.getRandomGiven(patGender)]
         }
       ],
       gender: patGender,
       birthDate: this.getRandomBirthDate(),
       address: [
         {
-          line: [
-            this.getRandomStreet()
-          ],
+          line: [this.getRandomStreet()],
           city: city.name,
           postalCode: city.zip,
           state: city.state,
           country: 'Switzerland'
         }
       ],
-      contained: [ this.organization ],
+      contained: [this.organization],
       managingOrganization: {
         reference: '#' + this.organization.id
       }

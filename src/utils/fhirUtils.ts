@@ -1,8 +1,37 @@
-import { Binary, BundleHTTPVerb, BundleType, ContactPoint, ContactPointSystem, Identifier, Organization, Patient, Address, AllergyIntoleranceReaction, CodeableConcept, Duration, AllergyIntolerance, dateTime, Reference, Meta, Resource, code, uri, Narrative, Annotation, Extension, AllergyIntoleranceType, AllergyIntoleranceCategory, AllergyIntoleranceCriticality, AllergyIntoleranceSeverity, Coding } from '@i4mi/fhir_r4';
-import { v4 as uuid } from 'uuid';
-import { AllergySystemCodeExtension } from './allergyCodes';
-import { Iti65DocumentBundle, Iti65DocumentBundleEntry } from './epdPlaygroundUtils';
-import { CLASS_CODES, CLASS_TYPE_COMBINATIONS, FACILITY_CLASS_CODES, TYPE_CODES } from './snomedCodes';
+import {
+  Binary,
+  BundleHTTPVerb,
+  BundleType,
+  ContactPoint,
+  ContactPointSystem,
+  Identifier,
+  Organization,
+  Patient,
+  Address,
+  AllergyIntoleranceReaction,
+  CodeableConcept,
+  Duration,
+  AllergyIntolerance,
+  dateTime,
+  Reference,
+  Meta,
+  Resource,
+  code,
+  uri,
+  Narrative,
+  Annotation,
+  Extension,
+  AllergyIntoleranceType,
+  AllergyIntoleranceCategory,
+  AllergyIntoleranceCriticality,
+  AllergyIntoleranceSeverity,
+  Coding,
+  getIdentifierString
+} from '@i4mi/fhir_r4';
+import {v4 as uuid} from 'uuid';
+import {AllergySystemCodeExtension} from './allergyCodes';
+import {Iti65DocumentBundle, Iti65DocumentBundleEntry} from './epdPlaygroundUtils';
+import {CLASS_CODES, CLASS_TYPE_COMBINATIONS, FACILITY_CLASS_CODES, TYPE_CODES} from './snomedCodes';
 
 /**
  * Provides necessary SNOMED codes in FHIR format, mapping functions and a functionality to
@@ -171,6 +200,16 @@ export default class FhirUtils {
           masterIdentifier: {
             value: documentReferenceMasterId
           },
+          extension: [
+            {
+              url: 'http://fhir.ch/ig/ch-epr-mhealth/StructureDefinition/ch-ext-author-authorrole',
+              valueCoding: {
+                system: 'urn:oid:2.16.756.5.30.1.127.3.10.6',
+                code: ITI_65_AUTHOR_ROLE[metaData.authorRole],
+                display: metaData.authorRole as unknown as string
+              }
+            }
+          ],
           identifier: [
             {
               use: 'official',
@@ -209,7 +248,8 @@ export default class FhirUtils {
               attachment: {
                 contentType: mimeType,
                 language: metaData.contentLanguage,
-                url: dataIdString
+                url: dataIdString,
+                title: metaData.title
               },
               format: formatCoding
             }
@@ -312,14 +352,23 @@ export default class FhirUtils {
    * @returns             an Organization FHIR resource with random UUID as id.
    * @throws              an Error if the Identifier does not contain a .system property with an oid
    */
-  public createFhirOrganization(_name: string, _identifier: Identifier, _contact: ContactInfo, _address?: Address): Organization {
+  public createFhirOrganization(
+    _name: string,
+    _identifier: Identifier,
+    _contact: ContactInfo,
+    _address?: Address
+  ): Organization {
     if (!_identifier.system || !_identifier.system.includes('urn:oid:')) {
-      throw new Error('Error creating Organization: Identifier needs a system OID (provided was: ' + (_identifier.system || '<no system>') + ').');
+      throw new Error(
+        'Error creating Organization: Identifier needs a system OID (provided was: ' +
+          (_identifier.system || '<no system>') +
+          ').'
+      );
     }
     if (!_identifier.value) {
       _identifier.value = _name;
     }
-    const organization = {
+    const organization: Organization = {
       resourceType: 'Organization',
       id: uuid(),
       identifier: [_identifier],
@@ -335,14 +384,14 @@ export default class FhirUtils {
         }
       ]
     };
-    if (_contact.phone) {
-      organization.contact[0].telecom.push({
+    if (_contact.phone && organization.contact && organization.contact[0]) {
+      organization.contact[0].telecom!.push({
         system: ContactPointSystem.PHONE,
         value: _contact.phone
       });
     }
-    if (_contact.mail) {
-      organization.contact[0].telecom.push({
+    if (_contact.mail && organization.contact && organization.contact[0]) {
+      organization.contact[0].telecom!.push({
         system: ContactPointSystem.EMAIL,
         value: _contact.mail
       });
@@ -362,8 +411,15 @@ export default class FhirUtils {
    * Note about reactions: paramsAllergy.reaction will be ignored, use paramsEpisodes instead
    * Bote about lastOccurrence: will be set according to paramsEpisodes if given
    */
-  public createCHAllergyIntolerance(paramsAllergy: AllergyIntoleranceParams, paramsEpisodes?: AllergyIntoleranceEpisodeParams[]): CHAllergyIntolerance {
-    if (paramsAllergy.patient == null || paramsAllergy.patient.identifier == null || paramsAllergy.patient.identifier.length === 0) {
+  public createCHAllergyIntolerance(
+    paramsAllergy: AllergyIntoleranceParams,
+    paramsEpisodes?: AllergyIntoleranceEpisodeParams[]
+  ): CHAllergyIntolerance {
+    if (
+      paramsAllergy.patient == null ||
+      paramsAllergy.patient.identifier == null ||
+      paramsAllergy.patient.identifier.length === 0
+    ) {
       throw new Error('Patient resource missing or incomplete.');
     }
 
@@ -373,12 +429,25 @@ export default class FhirUtils {
 
     // FHIR validation for AllergyIntolerance
     // 'AllergyIntolerance.clinicalStatus SHALL be present if verificationStatus is not entered-in-error.'
-    const verificationStatus = paramsAllergy.verificationStatus && paramsAllergy.verificationStatus.coding ? paramsAllergy.verificationStatus && paramsAllergy.verificationStatus.coding.find((status) => status.system === ALLERGY_INTOLERANCE_VERIFICATION_URL) : undefined;
-    if (!paramsAllergy.clinicalStatus && ((verificationStatus && verificationStatus.code !== 'entered-in-error') || !verificationStatus)) {
-      throw new Error('AllergyIntolerance.clinicalStatus SHALL be present if verificationStatus is not entered-in-error.');
+    const verificationStatus =
+      paramsAllergy.verificationStatus && paramsAllergy.verificationStatus.coding
+        ? paramsAllergy.verificationStatus &&
+          paramsAllergy.verificationStatus.coding.find(
+            (status) => status.system === ALLERGY_INTOLERANCE_VERIFICATION_URL
+          )
+        : undefined;
+    if (
+      !paramsAllergy.clinicalStatus &&
+      ((verificationStatus && verificationStatus.code !== 'entered-in-error') || !verificationStatus)
+    ) {
+      throw new Error(
+        'AllergyIntolerance.clinicalStatus SHALL be present if verificationStatus is not entered-in-error.'
+      );
     }
     if (verificationStatus && verificationStatus.code === 'entered-in-error' && paramsAllergy.clinicalStatus) {
-      throw new Error('AllergyIntolerance.clinicalStatus SHALL NOT be present if verification Status is entered-in-error.');
+      throw new Error(
+        'AllergyIntolerance.clinicalStatus SHALL NOT be present if verification Status is entered-in-error.'
+      );
     }
 
     // generate ids
@@ -387,7 +456,10 @@ export default class FhirUtils {
     const patientIdentifierString = patientSystem + '|' + patientValue;
 
     if (paramsAllergy.meta) {
-      if (paramsAllergy.meta.profile && paramsAllergy.meta.profile.findIndex((p) => p === CH_ALLERGY_INTOLERANCE_PROFILE) === -1) {
+      if (
+        paramsAllergy.meta.profile &&
+        paramsAllergy.meta.profile.findIndex((p) => p === CH_ALLERGY_INTOLERANCE_PROFILE) === -1
+      ) {
         paramsAllergy.meta.profile.push(CH_ALLERGY_INTOLERANCE_PROFILE);
       } else {
         paramsAllergy.meta.profile = [CH_ALLERGY_INTOLERANCE_PROFILE];
@@ -398,9 +470,10 @@ export default class FhirUtils {
       resourceType: 'AllergyIntolerance',
       id: paramsAllergy.id ? paramsAllergy.id : uuid(),
       identifier: paramsAllergy.identifier,
-      meta: paramsAllergy.meta || { profile: [CH_ALLERGY_INTOLERANCE_PROFILE] },
+      meta: paramsAllergy.meta || {profile: [CH_ALLERGY_INTOLERANCE_PROFILE]},
       code: paramsAllergy.code,
-      implicitRules: paramsAllergy.implicitRules && paramsAllergy.implicitRules.length > 0 ? paramsAllergy.implicitRules : undefined,
+      implicitRules:
+        paramsAllergy.implicitRules && paramsAllergy.implicitRules.length > 0 ? paramsAllergy.implicitRules : undefined,
       language: paramsAllergy.language && paramsAllergy.language.length > 0 ? paramsAllergy.language : undefined,
       text: paramsAllergy.text,
       contained: paramsAllergy.contained && paramsAllergy.contained.length > 0 ? paramsAllergy.contained : undefined,
@@ -411,11 +484,16 @@ export default class FhirUtils {
       category: paramsAllergy.category && paramsAllergy.category.length > 0 ? paramsAllergy.category : undefined,
       criticality: paramsAllergy.criticality,
       encounter: paramsAllergy.encounter,
-      onsetDateTime: paramsAllergy.onsetDateTime && paramsAllergy.onsetDateTime.length > 0 ? paramsAllergy.onsetDateTime : undefined,
-      recordedDate: paramsAllergy.recordedDate && paramsAllergy.recordedDate.length > 0 ? paramsAllergy.recordedDate : undefined,
+      onsetDateTime:
+        paramsAllergy.onsetDateTime && paramsAllergy.onsetDateTime.length > 0 ? paramsAllergy.onsetDateTime : undefined,
+      recordedDate:
+        paramsAllergy.recordedDate && paramsAllergy.recordedDate.length > 0 ? paramsAllergy.recordedDate : undefined,
       recorder: paramsAllergy.recorder,
       asserter: paramsAllergy.asserter,
-      lastOccurrence: paramsAllergy.lastOccurrence && paramsAllergy.lastOccurrence.length > 0 ? paramsAllergy.lastOccurrence : undefined,
+      lastOccurrence:
+        paramsAllergy.lastOccurrence && paramsAllergy.lastOccurrence.length > 0
+          ? paramsAllergy.lastOccurrence
+          : undefined,
       note: paramsAllergy.note && paramsAllergy.note.length > 0 ? paramsAllergy.note : undefined,
       patient: {
         reference: 'Patient/' + patientIdentifierString
@@ -450,7 +528,10 @@ export default class FhirUtils {
           exposureRoute: params.exposureRoute
         } as AllergyIntoleranceReaction;
 
-        if (params.allergyintoleranceCertainty && !(episode.extension && episode.extension.findIndex((e) => e.url === ALLERGYINTOLERANCE_CERTAINTY_URL) === -1)) {
+        if (
+          params.allergyintoleranceCertainty &&
+          !(episode.extension && episode.extension.findIndex((e) => e.url === ALLERGYINTOLERANCE_CERTAINTY_URL) === -1)
+        ) {
           if (!episode.extension) {
             episode.extension = [];
           }
@@ -460,7 +541,10 @@ export default class FhirUtils {
           });
         }
 
-        if (params.allergyintoleranceDuration && !(episode.extension && episode.extension.findIndex((e) => e.url === ALLERGYINTOLERANCE_DURATION_URL) === -1)) {
+        if (
+          params.allergyintoleranceDuration &&
+          !(episode.extension && episode.extension.findIndex((e) => e.url === ALLERGYINTOLERANCE_DURATION_URL) === -1)
+        ) {
           if (!episode.extension) {
             episode.extension = [];
           }
@@ -470,7 +554,10 @@ export default class FhirUtils {
           });
         }
 
-        if (params.openEHRExposureDate && !(episode.extension && episode.extension.findIndex((e) => e.url === OPENEHR_EXPOSURE_DATE_URL) === -1)) {
+        if (
+          params.openEHRExposureDate &&
+          !(episode.extension && episode.extension.findIndex((e) => e.url === OPENEHR_EXPOSURE_DATE_URL) === -1)
+        ) {
           if (!episode.extension) {
             episode.extension = [];
           }
@@ -480,7 +567,10 @@ export default class FhirUtils {
           });
         }
 
-        if (params.openEHRExposureDuration && !(episode.extension && episode.extension.findIndex((e) => e.url === OPENEHR_EXPOSURE_DURATION_URL) === -1)) {
+        if (
+          params.openEHRExposureDuration &&
+          !(episode.extension && episode.extension.findIndex((e) => e.url === OPENEHR_EXPOSURE_DURATION_URL) === -1)
+        ) {
           if (!episode.extension) {
             episode.extension = [];
           }
@@ -490,7 +580,10 @@ export default class FhirUtils {
           });
         }
 
-        if (params.openEHRExposureDescription && !(episode.extension && episode.extension.findIndex((e) => e.url === OPENEHR_EXPOSURE_DESCIPTION_URL) === -1)) {
+        if (
+          params.openEHRExposureDescription &&
+          !(episode.extension && episode.extension.findIndex((e) => e.url === OPENEHR_EXPOSURE_DESCIPTION_URL) === -1)
+        ) {
           if (!episode.extension) {
             episode.extension = [];
           }
@@ -500,7 +593,10 @@ export default class FhirUtils {
           });
         }
 
-        if (params.openEHRLocation && !(episode.extension && episode.extension.findIndex((e) => e.url === OPENEHR_EXPOSURE_LOCATION_URL) === -1)) {
+        if (
+          params.openEHRLocation &&
+          !(episode.extension && episode.extension.findIndex((e) => e.url === OPENEHR_EXPOSURE_LOCATION_URL) === -1)
+        ) {
           if (!episode.extension) {
             episode.extension = [];
           }
@@ -510,7 +606,10 @@ export default class FhirUtils {
           });
         }
 
-        if (params.openEHRManagement && !(episode.extension && episode.extension.findIndex((e) => e.url === OPENEHR_EXPOSURE_MANAGEMENT_URL) === -1)) {
+        if (
+          params.openEHRManagement &&
+          !(episode.extension && episode.extension.findIndex((e) => e.url === OPENEHR_EXPOSURE_MANAGEMENT_URL) === -1)
+        ) {
           if (!episode.extension) {
             episode.extension = [];
           }
@@ -537,7 +636,10 @@ export default class FhirUtils {
 
           if (!latestReaction) {
             latestReaction = episode;
-          } else if (latestReaction.onset && episodeDate.getMilliseconds() < new Date(latestReaction.onset).getMilliseconds()) {
+          } else if (
+            latestReaction.onset &&
+            episodeDate.getMilliseconds() < new Date(latestReaction.onset).getMilliseconds()
+          ) {
             // current episode is before latest reaction
             latestReaction = episode;
           }
@@ -552,7 +654,11 @@ export default class FhirUtils {
   /**
    * Alphabetical sorting for language displays of SystemCodeExtension or AllergySystemCodeExtension according to app language.
    */
-  public sortSystemCodeExtensionOptions(a: SystemCodeExtension | AllergySystemCodeExtension, b: SystemCodeExtension | AllergySystemCodeExtension, language: FhirUtilLanguageType): number {
+  public sortSystemCodeExtensionOptions(
+    a: SystemCodeExtension | AllergySystemCodeExtension,
+    b: SystemCodeExtension | AllergySystemCodeExtension,
+    language: FhirUtilLanguageType
+  ): number {
     if (a.languageDisplays[language] < b.languageDisplays[language]) {
       return -1;
     }
@@ -584,7 +690,11 @@ export default class FhirUtils {
    *                          (supported: en, de, fr, it, rm)
    * @returns display string
    */
-  public getDisplayByCodeAndLanguage(code: string, codeLibrary: Array<SystemCodeExtension> | Array<AllergySystemCodeExtension>, language: FhirUtilLanguageType): string {
+  public getDisplayByCodeAndLanguage(
+    code: string,
+    codeLibrary: Array<SystemCodeExtension> | Array<AllergySystemCodeExtension>,
+    language: FhirUtilLanguageType
+  ): string {
     if (codeLibrary && codeLibrary.length > 0) {
       const systemCode = codeLibrary.find((entry) => entry.defaultCoding.code === code);
       return systemCode ? systemCode.languageDisplays[language] : '?';
@@ -602,6 +712,21 @@ export default class FhirUtils {
    */
   public findSystemCodeExtension(code: string, extensions: SystemCodeExtension[]): SystemCodeExtension | undefined {
     return extensions.find((e) => e.defaultCoding.code === code);
+  }
+
+  /**
+   * Gets the identifier string for a given OID (of the identifier) from a Patient resource
+   * @param patient a Patient resource
+   * @param oid     the OID of the system the wanted identifier is in
+   * @returns       a string in the form of urn:oid:1.1.1.99.1|1e3796be
+   * @throws        an Error if the Patient resource has no identifier whose system matches the OID.
+   * @deprecated    use @i4mi/fhir_r4 getIdentifierString instead
+   */
+  public getIdentifierString(patient: Patient, oid: string): string {
+    const oidWithPrefix = oid.indexOf('urn:oid') === 0
+      ? oid
+      : 'urn:oid:' + oid;
+    return getIdentifierString(patient, oidWithPrefix);
   }
 
   /**
@@ -668,6 +793,7 @@ export interface Iti65Metadata {
   typeCoding: SystemCode;
   facilityCoding: SystemCode;
   practiceSettingCoding: SystemCode;
+  authorRole: ITI_65_AUTHOR_ROLE;
 }
 
 /**
@@ -842,7 +968,8 @@ export interface ContactInfo {
 /**
  * URLS to determine properties.
  */
-export const CH_ALLERGY_INTOLERANCE_PROFILE = 'https://fhir.ch/ig/ch-allergyintolerance/StructureDefinition/ch-allergyintolerance';
+export const CH_ALLERGY_INTOLERANCE_PROFILE =
+  'http://fhir.ch/ig/ch-allergyintolerance/StructureDefinition/ch-allergyintolerance';
 export const ABATEMENT_DATETIME_URL = 'http://hl7.org/fhir/uv/ips/StructureDefinition/abatement-dateTime-uv-ips';
 export const ALLERGYINTOLERANCE_CERTAINTY_URL = 'http://hl7.org/fhir/StructureDefinition/allergyintolerance-certainty';
 export const ALLERGYINTOLERANCE_DURATION_URL = 'http://hl7.org/fhir/StructureDefinition/allergyintolerance-duration';
@@ -851,7 +978,8 @@ export const OPENEHR_EXPOSURE_DURATION_URL = 'http://hl7.org/fhir/StructureDefin
 export const OPENEHR_EXPOSURE_DESCIPTION_URL = 'http://hl7.org/fhir/StructureDefinition/openEHR-exposureDescription';
 export const OPENEHR_EXPOSURE_LOCATION_URL = 'http://hl7.org/fhir/StructureDefinition/openEHR-location';
 export const OPENEHR_EXPOSURE_MANAGEMENT_URL = 'http://hl7.org/fhir/StructureDefinition/openEHR-management';
-export const ALLERGY_INTOLERANCE_VERIFICATION_URL = 'http://terminology.hl7.org/CodeSystem/allergyintolerance-verification';
+export const ALLERGY_INTOLERANCE_VERIFICATION_URL =
+  'http://terminology.hl7.org/CodeSystem/allergyintolerance-verification';
 
 /**
  * Available language displays for FHIR usage.
@@ -860,31 +988,53 @@ export const SUPPORTED_LANGUAGE_DISPLAYS = [
   {
     value: 'en',
     label: {
-      de: 'englisch'
+      de: 'Englisch',
+      fr: 'anglais',
+      en: 'English'
     }
   },
   {
     value: 'de',
     label: {
-      de: 'deutsch'
+      de: 'Deutsch',
+      fr: 'allemand',
+      en: 'German'
     }
   },
   {
     value: 'fr',
     label: {
-      de: 'französisch'
+      de: 'Französisch',
+      fr: 'français',
+      en: 'French'
     }
   },
   {
     value: 'it',
     label: {
-      de: 'italienisch'
+      de: 'Italienisch',
+      fr: 'italien',
+      en: 'Italian'
     }
   },
   {
     value: 'rm',
     label: {
-      de: 'rätoromanisch'
+      de: 'Rätoromanisch',
+      fr: 'romanche',
+      en: 'Romansh'
     }
   }
 ];
+
+/**
+ * ValueSet describing the author roles.
+ * @see https://fhir.ch/ig/ch-epr-term/2.0.1/CodeSystem-2.16.756.5.30.1.127.3.10.6.html
+ */
+export enum ITI_65_AUTHOR_ROLE {
+  PAT = 'Patient' as any,
+  HCP = 'Healthcare professional' as any,
+  ASS = 'Assistant' as any,
+  REP = 'Represantive' as any,
+  TCU = 'Technical user' as any
+}

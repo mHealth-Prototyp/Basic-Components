@@ -7,6 +7,7 @@ import {
   List,
   ListStatus,
   DocumentReferenceStatus,
+  Identifier,
   DocumentReference,
   BundleType,
   Binary,
@@ -53,7 +54,7 @@ export default class EpdPlaygroundUtils {
    * @param  _documentBundle  the document bundle to upload
    * @returns                 a Promise with the server response (the uploaded Document Bundle with servers IDs)
    */
-    public useITI65(_documentBundle: Iti65DocumentBundle): Promise<Bundle> {
+  public useITI65(_documentBundle: Iti65DocumentBundle): Promise<Bundle> {
     return this.fetch('', HttpMethod.POST, {}, _documentBundle).then((response) => {
       return response as Bundle;
     });
@@ -95,16 +96,14 @@ export default class EpdPlaygroundUtils {
    * @returns        a Promise with List resources matching the given search criteria.
    */
   public useITI67(_params: Partial<Iti67Params>): Promise<DocumentReference[]> {
-    return this.fetch('DocumentReference', HttpMethod.GET, _params).then(
-      (resource) => {
-        const bundle = resource as Bundle;
-        if (bundle.entry) {
-          return bundle.entry.map((entry) => entry.resource as DocumentReference);
-        } else {
-          return new Array<DocumentReference>();
-        }
+    return this.fetch('DocumentReference', HttpMethod.GET, _params).then((resource) => {
+      const bundle = resource as Bundle;
+      if (bundle.entry) {
+        return bundle.entry.map((entry) => entry.resource as DocumentReference);
+      } else {
+        return new Array<DocumentReference>();
       }
-    );
+    });
   }
 
   /**
@@ -120,11 +119,12 @@ export default class EpdPlaygroundUtils {
    */
   public useITI68(_reference: DocumentReference | string): Promise<string> {
     return new Promise((resolve, reject) => {
-      let link = typeof _reference === 'string'
-        ? _reference
-        : _reference.content.find((c) => c.attachment && c.attachment.url)?.attachment.url;
+      let link =
+        typeof _reference === 'string'
+          ? _reference
+          : _reference.content.find((c) => c.attachment && c.attachment.url)?.attachment.url;
 
-      if (link && (link.indexOf('http') === 0)) {
+      if (link && link.indexOf('http') === 0) {
         // when app runs on https, all links should be https or browsers will block them
         // Note: apparently EPD Playground generates http links for document attachment URLs
         if (location.protocol == 'https:' && link.indexOf('https') !== 0) {
@@ -145,9 +145,7 @@ export default class EpdPlaygroundUtils {
             return resolve(xhr.response as string);
           } else {
             // loaded but non-successful response
-            return reject(
-              new Error('Status: ' + status.toString() + '. ' + xhr.statusText)
-            );
+            return reject(new Error('Status: ' + status.toString() + '. ' + xhr.statusText));
           }
         };
         xhr.ontimeout = () => {
@@ -161,15 +159,11 @@ export default class EpdPlaygroundUtils {
         };
         xhr.onerror = (error) => {
           console.log('Error when loading file.', error);
-          return reject(
-            new Error('Error. transaction failed. See console for details.')
-          );
+          return reject(new Error('Error. transaction failed. See console for details.'));
         };
         xhr.send();
       } else {
-        return reject(
-          'Invalid argument: No valid URL to document in _reference.'
-        );
+        return reject('Invalid argument: No valid URL to document in _reference.');
       }
     });
   }
@@ -199,9 +193,7 @@ export default class EpdPlaygroundUtils {
       if (resource.resourceType === 'Parameters') {
         return resource as Parameters;
       } else {
-        return Promise.reject(
-          'No entry found for given sourceIdentifier (' + _sourceIdentifier + ').'
-        );
+        return Promise.reject('No entry found for given sourceIdentifier (' + _sourceIdentifier + ').');
       }
     });
   }
@@ -221,9 +213,7 @@ export default class EpdPlaygroundUtils {
       if (resource.resourceType === 'Patient') {
         return [resource as Patient];
       } else if (resource.resourceType === 'Bundle') {
-        return (
-          (resource as Bundle).entry?.map((e) => e.resource as Patient) || []
-        );
+        return (resource as Bundle).entry?.map((e) => e.resource as Patient) || [];
       } else {
         return Promise.reject('No valid reply from server.');
       }
@@ -246,15 +236,19 @@ export default class EpdPlaygroundUtils {
     // check if Patient resouce is valid
     if (!_patient.contained || _patient.contained.length === 0) {
       console.log('Invalid argument: ', _patient);
-      return Promise.reject('Invalid argument: Patient resource needs to contain a Organization resource of the managing organization.');
+      return Promise.reject(
+        'Invalid argument: Patient resource needs to contain a Organization resource of the managing organization.'
+      );
     } else if (
       !_patient.managingOrganization ||
       !_patient.managingOrganization.reference ||
       !_patient.contained[0].id ||
-      _patient.managingOrganization.reference !== ('#' + _patient.contained[0].id.toString())
-      ) {
+      _patient.managingOrganization.reference !== '#' + _patient.contained[0].id.toString()
+    ) {
       console.log('Invalid argument: ', _patient, _patient.managingOrganization?.reference, _patient.contained[0].id);
-      return Promise.reject('Invalid argument: Contained Organization resource needs to be referenced in patient.managingOrganization.');
+      return Promise.reject(
+        'Invalid argument: Contained Organization resource needs to be referenced in patient.managingOrganization.'
+      );
     }
 
     _patient.id = _patient.id || 'temporary-patient-id';
@@ -280,7 +274,7 @@ export default class EpdPlaygroundUtils {
     const patientBundleEntry = {
       fullUrl: this.env.BASE_URL + 'Patient/' + _patient.id,
       request: {
-        url: this.env.BASE_URL  + 'Patient',
+        url: this.env.BASE_URL + 'Patient',
         method: BundleHTTPVerb.POST
       },
       resource: _patient as Resource
@@ -298,71 +292,72 @@ export default class EpdPlaygroundUtils {
     };
 
     switch (_action) {
-    case ITI_93_ACTION.ADD:
-      message.entry?.push(patientBundleEntry);
-      break;
-    case ITI_93_ACTION.UPDATE:
-      patientBundleEntry.request.method = BundleHTTPVerb.PUT;
-      message.entry?.push(patientBundleEntry);
-      break;
-    case ITI_93_ACTION.MERGE:
-      if (!_mergePatient) {
-        return Promise.reject('Invalid argument: _mergePatient can\'t be undefined for ITI_93_ACTION.MERGE.');
-      }
-      if (!_mergePatient.id || _mergePatient.id === _patient.id) {
-        _mergePatient.id = 'temporary-mergePatient-id';
-      }
+      case ITI_93_ACTION.ADD:
+        message.entry?.push(patientBundleEntry);
+        break;
+      case ITI_93_ACTION.UPDATE:
+        patientBundleEntry.request.method = BundleHTTPVerb.PUT;
+        message.entry?.push(patientBundleEntry);
+        break;
+      case ITI_93_ACTION.MERGE:
+        if (!_mergePatient) {
+          return Promise.reject("Invalid argument: _mergePatient can't be undefined for ITI_93_ACTION.MERGE.");
+        }
+        if (!_mergePatient.id || _mergePatient.id === _patient.id) {
+          _mergePatient.id = 'temporary-mergePatient-id';
+        }
 
-      _mergePatient.active = true;
-      _patient.active = false;
-      _patient.link = [
-        {
+        _mergePatient.active = true;
+        _patient.active = false;
+        _patient.link = [
+          {
             other: {
-                reference: '#' + _mergePatient.id
+              reference: '#' + _mergePatient.id
             },
             type: PatientLinkType.REPLACED_BY
-        }
-      ];
-      _mergePatient.managingOrganization = _mergePatient.managingOrganization || _patient.managingOrganization;
-      _patient.contained.push(_mergePatient);
-
-      const historyBundle: Bundle = {
-        resourceType: 'Bundle',
-        id: 'temporary-bundle-id',
-        type: BundleType.HISTORY,
-        entry: [
-          {
-            resource: _patient,
-            request: {
-              url: this.env.BASE_URL  + 'Patient',
-              method: BundleHTTPVerb.PUT
-            }
           }
-        ]
-      };
-      message.entry?.push({
-        resource: historyBundle
-      });
-      break;
-    case ITI_93_ACTION.REMOVE:
-      patientBundleEntry.request.method = BundleHTTPVerb.DELETE;
-      message.entry?.push(patientBundleEntry);
-      console.warn('REMOVE is not supported on EPD Playground / Mobile Access Gateway. Patient is not deleted, although server responds with \'ok\'.');
-      break;
-    default:
-      console.warn('ITI-93 ' + String(_action) + ' is not implemented.');
+        ];
+        _mergePatient.managingOrganization = _mergePatient.managingOrganization || _patient.managingOrganization;
+        _patient.contained.push(_mergePatient);
+
+        const historyBundle: Bundle = {
+          resourceType: 'Bundle',
+          id: 'temporary-bundle-id',
+          type: BundleType.HISTORY,
+          entry: [
+            {
+              resource: _patient,
+              request: {
+                url: this.env.BASE_URL + 'Patient',
+                method: BundleHTTPVerb.PUT
+              }
+            }
+          ]
+        };
+        message.entry?.push({
+          resource: historyBundle
+        });
+        break;
+      case ITI_93_ACTION.REMOVE:
+        patientBundleEntry.request.method = BundleHTTPVerb.DELETE;
+        message.entry?.push(patientBundleEntry);
+        console.warn(
+          "REMOVE is not supported on EPD Playground / Mobile Access Gateway. Patient is not deleted, although server responds with 'ok'."
+        );
+        break;
+      default:
+        console.warn('ITI-93 ' + String(_action) + ' is not implemented.');
     }
 
-    return this.fetch(this.env.MESSAGE_ENDPOINT, HttpMethod.POST, undefined, message)
-    .then((res) => {
+    return this.fetch(this.env.MESSAGE_ENDPOINT, HttpMethod.POST, undefined, message).then((res) => {
       return res as Bundle;
     });
-  } 
+  }
 
   /**
    * ITI-104 Patient Identity Feed
    *
-   * Adds or edits patient resource. (Currently not supported. Use ITI-93 instead.)
+   * Adds or edits patient resource.
    *
    * @see   IHE spec        https://profiles.ihe.net/ITI/MHD/ITI-104.html
    * @see   CH spec         https://fhir.ch/ig/ch-epr-mhealth/iti-104.html
@@ -371,9 +366,63 @@ export default class EpdPlaygroundUtils {
    * @param _mergePatient?  only needed when _action is merge: The patient to replace the original _patient when merging
    * @returns               a Promise with a the server response (the uploaded Bundle with servers IDs)
    */
-  public useITI104(_patient: Patient,_action: ITI_104_ACTION, _mergePatient?: Patient): Promise<Bundle> {
-    console.log('ITI-104 not implemented.', _patient, _action, _mergePatient);
-    return Promise.reject('ITI-104 is currently not supported by Mobile Access Gateway. Use ITI-93 instead');
+  public useITI104(_patient: Patient, _action: ITI_104_ACTION, _mergePatient?: Patient): Promise<Patient> {
+    const uploadPatient = {..._patient};
+    let localIdentifier: Identifier | undefined = undefined;
+    if (_patient.identifier) {
+      localIdentifier = _patient.identifier.find((id) => id.system === this.oids.local);
+    }
+    if (localIdentifier === undefined || !localIdentifier.value) {
+      return Promise.reject(
+        'Patient needs at least a local identifier for ITI-104 transactions (local identifier urn is: "' +
+          this.oids.local +
+          '").'
+      );
+    }
+
+    const method = _action === ITI_104_ACTION.REMOVE ? HttpMethod.DELETE : HttpMethod.PUT;
+
+    if (_action === ITI_104_ACTION.RESOLVE_DUPLICATE) {
+      if (!_mergePatient || !_mergePatient.identifier) {
+        return Promise.reject(
+          'No _mergePatient argument provided; this is necessary for ITI_104_ACTION.RESOLVE.DUPLICATE.'
+        );
+      }
+
+      const mergeIdentifier = _mergePatient.identifier.find((identifier) => identifier.system === this.oids.local);
+      if (!mergeIdentifier) {
+        return Promise.reject(
+          '_mergePatient has no local identifier; this is necessary for ITI_104_ACTION.RESOLVE.DUPLICATE.'
+        );
+      }
+      uploadPatient.link = [
+        {
+          other: {
+            identifier: mergeIdentifier
+          },
+          type: PatientLinkType.REPLACED_BY
+        }
+      ];
+    }
+
+    return this.fetch(
+      this.env.BASE_URL + 'Patient?identifier=' + localIdentifier.system + '|' + localIdentifier.value, // address
+      method, // method
+      {}, // params
+      uploadPatient, // payload
+      {
+        'Content-Type': 'application/fhir+json; fhirVersion=4.0',
+        Accept: 'application/fhir+json; fhirVersion=4.0',
+        Prefer: 'return=Representation'
+      } // headers
+    )
+      .then((res) => {
+        return res as Patient;
+      })
+      .catch((err) => {
+        console.log('Error in ITI-104', err);
+        return Promise.reject('Error in ITI-104, please see console for details.');
+      });
   }
 
   /**
@@ -382,8 +431,7 @@ export default class EpdPlaygroundUtils {
    * @returns     a Promise with the DocumentReference Resource
    */
   public fetchDocumentReference(_id: string): Promise<DocumentReference> {
-    return this.fetch('DocumentReference/' + _id, HttpMethod.GET)
-    .then(res => res as DocumentReference);
+    return this.fetch('DocumentReference/' + _id, HttpMethod.GET).then((res) => res as DocumentReference);
   }
 
   /**
@@ -398,13 +446,11 @@ export default class EpdPlaygroundUtils {
   private fetch(
     _endpoint: string,
     _httpMethod: HttpMethod,
-    _params?: { [key: string]: string },
+    _params?: {[key: string]: string},
     _payload?: Resource,
-    _headers?: { [key: string]: string }
+    _headers?: {[key: string]: string}
   ): Promise<Resource> {
-    let url = _endpoint.indexOf('http') === 0
-      ? _endpoint
-      : this.env.BASE_URL + _endpoint;
+    let url = _endpoint.indexOf('http') === 0 ? _endpoint : this.env.BASE_URL + _endpoint;
 
     if (_params) {
       url += '?';
@@ -430,28 +476,28 @@ export default class EpdPlaygroundUtils {
         const status = xhr.status;
         if (status >= 200 && status < 300) {
           // successful response
-          const resource = JSON.parse(xhr.responseText) as Resource;
+          const resource: Resource = xhr.responseText.length > 0 ? (JSON.parse(xhr.responseText)) : {};
           if (resource.resourceType === 'Bundle') {
             const bundle = resource as Bundle;
             // check if it's multi page
             if (bundle.entry && bundle.total && bundle.entry.length !== Number(bundle.total)) {
               // it is a multi page bundle
-              const nextLink = bundle.link?.find(link => link.relation === 'next');
+              const nextLink = bundle.link?.find((link) => link.relation === 'next');
               if (!nextLink || !nextLink.url) {
                 return resolve(bundle);
               }
               this.fetch(nextLink.url, _httpMethod, _params)
-              .then(next => {
-                const nextPageBundle = next as Bundle;
-                bundle.total = (Number(bundle.total) + Number(nextPageBundle.total)).toString();
-                bundle.entry = (bundle.entry ?? []).concat(nextPageBundle.entry ?? []);
-                bundle.link = nextPageBundle.link;
-                return resolve(bundle);
-              })
-              .catch((error) => {
-                console.log('Something went wrong fetching the next page of the bundle (' + nextLink + ')', error);
-                return reject(error);
-              });
+                .then((next) => {
+                  const nextPageBundle = next as Bundle;
+                  bundle.total = Number(bundle.total) + Number(nextPageBundle.total);
+                  bundle.entry = (bundle.entry ?? []).concat(nextPageBundle.entry ?? []);
+                  bundle.link = nextPageBundle.link;
+                  return resolve(bundle);
+                })
+                .catch((error) => {
+                  console.log('Something went wrong fetching the next page of the bundle (' + nextLink + ')', error);
+                  return reject(error);
+                });
             } else {
               // it's single page, just return the bundle
               return resolve(bundle);
@@ -461,9 +507,7 @@ export default class EpdPlaygroundUtils {
           }
         } else {
           // loaded but non-successful response
-          return reject(
-            new Error('Status: ' + status.toString() + '. ' + xhr.statusText)
-          );
+          return reject(new Error('Status: ' + status.toString() + '. ' + xhr.statusText));
         }
       };
       xhr.ontimeout = () => {
@@ -477,9 +521,7 @@ export default class EpdPlaygroundUtils {
       };
       xhr.onerror = (error) => {
         console.log('Error when fetching from endpoint' + _endpoint, error);
-        return reject(
-          new Error('Error. transaction failed. See console for details.')
-        );
+        return reject(new Error('Error. transaction failed. See console for details.'));
       };
 
       xhr.send(_payload ? JSON.stringify(_payload) : undefined);
@@ -493,21 +535,21 @@ export default class EpdPlaygroundUtils {
 
 /**
  * Settings for the EpdPlaygroundUtils constructor.
- * 
- * @param FHIR_4_CONTENT_TYPE the content-type header, specifying the FHIR version 
+ *
+ * @param FHIR_4_CONTENT_TYPE the content-type header, specifying the FHIR version
  *                            (for FHIR R4 use 'application/fhir+json; fhirVersion=4.0')
- * @param BASE_URL            base-url for the FHIR server 
+ * @param BASE_URL            base-url for the FHIR server
  *                            ('https://test.ahdis.ch/mag-bfh/fhir/' for Mobile Access Gateway)
  * @param MESSAGE_ENDPOINT    endpoint for processing FHIR messages
  *                            (usually '$process-message')
- * @param DEFAULT_TIMEOUT     how long to wait until a operation times out 
+ * @param DEFAULT_TIMEOUT     how long to wait until a operation times out
  *                            (in milliseconds, e.g. '20000')
  * @param SOURCE_ENDPOINT     Source endpoint for FHIR messaging
  *                            (e.g. 'http://example.com/patientSource')
  * @param TARGET_ENDPOINT     Target endpoint for FHIR messaging
  *                            (e.g. 'http://example.com/patientEndpoint')
  */
- export interface EpdPlaygroundUtilsSettings {
+export interface EpdPlaygroundUtilsSettings {
   FHIR_4_CONTENT_TYPE: string;
   BASE_URL: string;
   MESSAGE_ENDPOINT: string;
@@ -522,9 +564,7 @@ export default class EpdPlaygroundUtils {
 export interface Iti65DocumentBundle extends Bundle {
   resourceType: 'Bundle';
   meta: {
-    profile: [
-      'http://profiles.ihe.net/ITI/MHD/StructureDefinition/IHE.MHD.Comprehensive.ProvideBundle'
-    ];
+    profile: ['http://profiles.ihe.net/ITI/MHD/StructureDefinition/IHE.MHD.Comprehensive.ProvideBundle'];
   };
   type: BundleType.TRANSACTION;
   entry: Iti65DocumentBundleEntry[];
@@ -607,7 +647,7 @@ export interface Iti78Params {
   telecom: string; // not supported in Mobile Access Gateway?
   birthdate: string; // not supported in Mobile Access Gateway?
   address: string; // not supported in Mobile Access Gateway?
-  mothersMaidenName: string;  // not supported in Mobile Access Gateway?
+  mothersMaidenName: string; // not supported in Mobile Access Gateway?
 }
 
 /**
@@ -624,8 +664,7 @@ export enum ITI_93_ACTION {
  * Enum for ITI-104 to define action of editing patient.
  */
 export enum ITI_104_ACTION {
-  ADD = 'add',
-  UPDATE = 'update',
+  ADD_REVISE = 'add-revise',
   RESOLVE_DUPLICATE = 'resolve-duplicate',
   REMOVE = 'remove'
 }
@@ -642,10 +681,10 @@ export interface Oids {
 }
 
 export interface Settings {
-  language: APP_LANGUAGES,
-  organization: Organization,
-  facilityType: Coding,
-  practiceSetting: Coding
+  language: APP_LANGUAGES;
+  organization: Organization;
+  facilityType: Coding;
+  practiceSetting: Coding;
 }
 
 export enum APP_LANGUAGES {
