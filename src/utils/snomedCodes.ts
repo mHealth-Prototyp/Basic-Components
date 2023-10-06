@@ -250,7 +250,8 @@ export const CLASS_CODES = [
 
 /**
  * Type code according to DocumentEntry.typeCode definition:
- * @see http://build.fhir.org/ig/hl7ch/ch-epr-term/ValueSet-DocumentEntry.typeCode.html#logical-definition-cld
+ * @see http://fhir.ch/ig/ch-epr-term/ValueSet-DocumentEntry.typeCode.html
+ *
  *
  * DocumentEntry.typeCode is mapped to DocumentReference.type:
  * @see https://build.fhir.org/documentreference-mappings.html#xds

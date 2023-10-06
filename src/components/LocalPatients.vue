@@ -146,7 +146,7 @@ export default defineComponent({
       required: true
     },
     /**
-     * EpdPlaygroundUtils object initialized with the projects setup.
+     * PatientUtils object initialized with the projects setup.
      */
     patientUtils: {
       type: Object as PropType<PatientUtils>,

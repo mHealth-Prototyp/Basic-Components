@@ -131,6 +131,8 @@ export interface PatientViewTranslationStrings {
   addAllergyButton: string;
   editAllergyButton: string;
   documentViewTitle: string;
+  resourceViewTitle: string;
+  resourceLink: string;
 }
 
 /**
