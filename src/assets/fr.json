@@ -151,7 +151,9 @@
     "uploadUnsuccessful": "Le téléversement a échoué.",
     "addAllergyButton": "ajouter des données d'allergie",
     "editAllergyButton": "actualiser des données d'allergie",
-    "documentViewTitle": "Visionneur de documents FHIR"
+    "documentViewTitle": "Visionneur de documents FHIR",
+    "resourceViewTitle": "Visionneur de ressources FHIR",
+    "resourceLink" : "afficher la ressource entière"
   },
   "registerPatient": {
     "titleText": "Saisissez les données de base de la personne que vous souhaitez enregistrer sur l'EPD Playground.",

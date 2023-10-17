@@ -30,7 +30,7 @@ import {
 } from '@i4mi/fhir_r4';
 import {v4 as uuid} from 'uuid';
 import {AllergySystemCodeExtension} from './allergyCodes';
-import {Iti65DocumentBundle, Iti65DocumentBundleEntry} from './epdPlaygroundUtils';
+import {Iti65DocumentBundle, Iti65DocumentBundleEntry, Oids} from './epdPlaygroundUtils';
 import {CLASS_CODES, CLASS_TYPE_COMBINATIONS, FACILITY_CLASS_CODES, TYPE_CODES} from './snomedCodes';
 
 /**
@@ -41,8 +41,10 @@ import {CLASS_CODES, CLASS_TYPE_COMBINATIONS, FACILITY_CLASS_CODES, TYPE_CODES} 
 
 export default class FhirUtils {
   BASE_URL: string;
-  constructor(baseUrl: string) {
+  OIDS: Oids;
+  constructor(baseUrl: string, oids: Oids) {
     this.BASE_URL = baseUrl;
+    this.OIDS = oids;
   }
 
   /**
@@ -50,15 +52,20 @@ export default class FhirUtils {
    * @see   IHE spec  https://profiles.ihe.net/ITI/MHD/ITI-65.html
    * @see   CH spec   https://fhir.ch/ig/ch-epr-mhealth/iti-65.html
    *
-   * @param patient   individual or animal referenced in the bundle
+   * @param patient   individual or animal referenced in the bundle. needs to have the MPI Identifier as an
+   *                  identifier
    * @param file      file to add to bundle
    * @param metaData  meta data of the file
-   * @returns         a document bundle as Iti65DocumentBundle
+   * @returns         a Promise of a document bundle as Iti65DocumentBundle
    */
   public createIti65Bundle(patient: Patient, file: File, metaData: Iti65Metadata): Promise<Iti65DocumentBundle> {
     return new Promise<Iti65DocumentBundle>((resolve, reject) => {
       if (patient == null || patient.identifier == null || patient.identifier.length === 0) {
         return reject('Patient resource missing or incomplete.');
+      }
+
+      if (this.OIDS == undefined) {
+        return reject('FhirUtils has been initialized without passing oid object. Please update according to 0.4.6 version to library.');
       }
 
       // handle data
@@ -92,17 +99,19 @@ export default class FhirUtils {
       // handle todays date
       const todayString = new Date().toISOString().substring(0, 10);
 
-      // handle patient identifier
-      const patientId = patient.id as string;
-      const patientValue = patient.identifier[0].value as string;
-      const patientSystem = patient.identifier[0].system as string;
-      const patientIdentifierString = patientSystem + '-' + patientValue;
+      const identifier = patient.identifier.find((identifier) => identifier.system === this.OIDS.mpiId);
+
+      if (!identifier || !identifier.value) {
+        return reject('No MPI identifier was provided, can not generate ITI65 Bundle.');
+      }
+
+      const patientIdentifierString = this.OIDS.mpiId + '-' + identifier.value;
 
       // mime type handling
       const mimeType = file.type === 'application/json' && metaData.isFhir ? 'application/fhir+json' : file.type;
       // Because we can read mime type of file, we use it to describe content,
       // https://fhir.ch/ig/ch-epr-term/ValueSet-DocumentEntry.formatCode.html
-      // TODO could also be made more inteligent, e.g. to detect and precise CDA format
+      // TODO could also be made more intelligent, e.g. to detect and precise CDA format
       const formatCoding = {
         system: 'urn:oid:1.3.6.1.4.1.19376.1.2.3',
         code: 'urn:ihe:iti:xds:2017:mimeTypeSufficient',
@@ -196,7 +205,7 @@ export default class FhirUtils {
         fullUrl: documentIdString,
         resource: {
           resourceType: 'DocumentReference',
-          contained: [patient],
+          contained: [ patient ],
           masterIdentifier: {
             value: documentReferenceMasterId
           },
@@ -262,7 +271,7 @@ export default class FhirUtils {
               coding: [metaData.practiceSettingCoding]
             },
             sourcePatientInfo: {
-              reference: '#' + patientId
+              reference: '#' + patient.id
             }
           }
         },
@@ -451,6 +460,7 @@ export default class FhirUtils {
     }
 
     // generate ids
+    // TODO: does this also need to be MPI index?
     const patientValue = paramsAllergy.patient.identifier[0].value as string;
     const patientSystem = paramsAllergy.patient.identifier[0].system as string;
     const patientIdentifierString = patientSystem + '|' + patientValue;
@@ -723,9 +733,7 @@ export default class FhirUtils {
    * @deprecated    use @i4mi/fhir_r4 getIdentifierString instead
    */
   public getIdentifierString(patient: Patient, oid: string): string {
-    const oidWithPrefix = oid.indexOf('urn:oid') === 0
-      ? oid
-      : 'urn:oid:' + oid;
+    const oidWithPrefix = oid.indexOf('urn:oid') === 0 ? oid : 'urn:oid:' + oid;
     return getIdentifierString(patient, oidWithPrefix);
   }
 

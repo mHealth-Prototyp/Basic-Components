@@ -29,6 +29,7 @@ import {
 export default class EpdPlaygroundUtils {
   env: EpdPlaygroundUtilsSettings;
   oids: Oids;
+  private accessToken: string | undefined;
 
   constructor(settings: EpdPlaygroundUtilsSettings, oids: Oids) {
     this.env = settings;
@@ -41,6 +42,22 @@ export default class EpdPlaygroundUtils {
    */
   public getOids(): Oids {
     return this.oids;
+  }
+
+  /**
+   * Sets the optional access token for servers that need authorization
+   * @param token the access token to be set
+   */
+  public setAccessToken(_token: string): void {
+    this.accessToken = _token;
+  }
+
+  /**
+   * Removes the access token if set
+   * @param token the access token to be set
+   */
+  public deleteAccessToken(): void {
+    this.accessToken = undefined;
   }
 
   /**
@@ -126,7 +143,7 @@ export default class EpdPlaygroundUtils {
 
       if (link && link.indexOf('http') === 0) {
         // when app runs on https, all links should be https or browsers will block them
-        // Note: apparently EPD Playground generates http links for document attachment URLs
+        // Note: apparently EPD Playground generates http links for document attachment URLsc
         if (location.protocol == 'https:' && link.indexOf('https') !== 0) {
           // app is on https, and link doesn't start with https
           // so we change the link to https
@@ -134,7 +151,11 @@ export default class EpdPlaygroundUtils {
         }
 
         const xhr = new XMLHttpRequest();
+
         xhr.open(HttpMethod.GET, encodeURI(link), true);
+        if (this.accessToken) {
+          xhr.setRequestHeader('Authorization', 'Bearer ' + this.accessToken);
+        }
 
         xhr.timeout = this.env.DEFAULT_TIMEOUT;
 
@@ -470,6 +491,9 @@ export default class EpdPlaygroundUtils {
         for (const key in _headers) {
           xhr.setRequestHeader(key, _headers[key]);
         }
+      }
+      if (this.accessToken) {
+        xhr.setRequestHeader('Authorization', 'Bearer ' + this.accessToken);
       }
 
       xhr.onload = () => {

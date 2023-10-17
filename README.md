@@ -23,7 +23,8 @@ For examples of using the components, check out https://github.com/mHealth-Proto
   - [3.7 Patient Search](#37-patient-search)
   - [3.8 Patient View](#38-patient-view)
   - [3.9 Register Patient](#39-register-patient)
-- [4 Changelog](#4-changelog)
+- [4 License](#4-license)
+- [5 Changelog](#5-changelog)
 
 ## 1 How to set up
 
@@ -43,7 +44,7 @@ In Quasar, this is done in the `src/boot` directory. This file has also be refer
 import {boot} from 'quasar/wrappers';
 import {FhirUtils} from '@i4mi/mhealth-proto-components';
 
-const fhirUtils = new FhirUtils('https://my.base.url');
+const fhirUtils = new FhirUtils('https://my.base.url', { mpiId: 'urn:oid:1.1.1.99.1', /*more oids ...*/ });
 // ... more utils
 
 // Type declaration
@@ -94,6 +95,12 @@ The constructor of the EpdPlaygroundUtils needs the following arguments:
   - _local_: OID for your local system, depends on your use case
   - _app_: OID for your application, depends on your use case
 
+If your endpoints requires authorization, you can provide an access token to the EpdPlaygroundUtils that will be used for the requests.
+| Function | Description | Params | Returns |
+|----------|-------------|--------|----------|
+| setAccessToken(\_token: string) | Sets the optional access token for servers that need authorization. Any existing access token will be replaced by the given token. | **\_token**: The access token thats needed for authorization. | - |
+| deleteAccessToken() | Removes the currently set access token, if there is one. | - | - |
+
 Following FHIR transactions are provided by the epdPlaygroundUtils class:
 
 <!-- prettier-ignore -->
@@ -115,11 +122,17 @@ Following FHIR transactions are provided by the epdPlaygroundUtils class:
 The constructor for patientUtils needs only one argument:
 
 - **baseUrl**: The base URL of the FHIR endpoint you're using as a string.
+- **oids**: An object providing the urn:oid's used in the project, with following properties:
+  - _eprSpid_: OID for the EPR SPID (is: 'urn:oid:2.16.756.5.30.1.127.3.10.3')
+  - _mpiId_: OID for the Master Patient Index (on EPD Playground: 'urn:oid:1.1.1.99.1')
+  - _ahv_: OID for the swiss AHV number code system (is: 'urn:oid:2.16.756.5.32')
+  - _local_: OID for your local system, depends on your use case
+  - _app_: OID for your application, depends on your use case
 
 <!-- prettier-ignore -->
 |  Function | Description | Params | Returns |
 | --------- | ----------- | ------ | ------- |
-|    createIti65Bundle(patient: Patient, file: File, metaData: Iti65Metadata) | Creates a document bundle with a binary file according to [ITI-65](https://fhir.ch/ig/ch-epr-mhealth/iti-65.html). | **patient**: the patient FHIR resource the document belongs to<br /> **file**: the file to upload <br /> **metaData**: meta data describing the content of the file:<br />- title (as string)<br />- description (as string)<br />- isFhir? indicates that a .json file has FHIR content (as boolean)<br />- contentLanguage (as string)<br />- sourceIdentifier (as string)<br />- categoryCoding (as SystemCode)<br />- typeCoding (as SystemCode)<br />- facilityCoding (as SystemCode)<br />- practiceSettingCoding (as SystemCode)<br />- authorRole (as ITI_65_AUTHOR_ROLE): Describing the role of the file author ('PAT', 'HCP', 'ASS', 'REP' or 'TCU')  | A promise with a document bundle resource that can be used for the upload. |
+|    createIti65Bundle(patient: Patient, file: File, metaData: Iti65Metadata) | Creates a document bundle with a binary file according to [ITI-65](https://fhir.ch/ig/ch-epr-mhealth/iti-65.html). | **patient**: the patient FHIR resource the document belongs to (must have a MPI identifier)<br /> **file**: the file to upload <br /> **metaData**: meta data describing the content of the file:<br />- title (as string)<br />- description (as string)<br />- isFhir? indicates that a .json file has FHIR content (as boolean)<br />- contentLanguage (as string)<br />- sourceIdentifier (as string)<br />- categoryCoding (as SystemCode)<br />- typeCoding (as SystemCode)<br />- facilityCoding (as SystemCode)<br />- practiceSettingCoding (as SystemCode)<br />- authorRole (as ITI_65_AUTHOR_ROLE): Describing the role of the file author ('PAT', 'HCP', 'ASS', 'REP' or 'TCU')  | A promise with a document bundle resource that can be used for the upload. |
 |    createCHAllergyIntolerance(paramsAllergy: AllergyIntoleranceParams, paramsEpisodes?: AllergyIntoleranceEpisodeParams[]) | Creates an AllergyIntolerance resource according to CH AllergyIntolerance specification. | **paramsAllergy**: Information about allergy or intolerance (for detailed parameter types, see [@i4mi/fhir_r4](https://github.com/i4mi/fhir-resources-r4)):<br />- code (as CodeableConcept)<br />- patient (as Patient)<br />- id? (as string)<br />- meta? (as Meta)<br />- implicitRules? (as uri)<br />- language? (as code)<br />- text? (as Narrative)<br />- contained? (as Resource[])<br />- extension? (as Extension[])<br />- abatementDateTimeUvIps? (as dateTime)<br />- identifier? (as Identifier[])<br />- clinicalStatus? (as CodeableConcept)<br />- verificationStatus? (as CodeableConcept)<br />- type? (as AllergyIntoleranceType)<br />- category? (as AllergyIntoleranceCategory[])<br />- criticality? (as AllergyIntoleranceCriticality)<br />- encounter? (as Reference)<br />- onsetDateTime? (as dateTime)<br />- recordedDate? (as dateTime)<br />- recorder? (as Reference)<br />- asserter? (as Reference)<br />- lastOccurrence? (as dateTime)<br />- note? (as Annotation[])<br />**paramsEpisodes**: Adverse Reaction Events linked to exposure to substance (for detailed parameter types, see [@i4mi/fhir_r4](https://github.com/i4mi/fhir-resources-r4)):<br />- id? (as string)<br />- extension? (as Extension[])<br />- allergyintoleranceCertainty? (as CodeableConcept)<br />- allergyintoleranceDuration? (as Duration)<br />- openEHRLocation? (as CodeableConcept)<br />- openEHRExposureDate? (as dateTime)<br />- openEHRExposureDuration? (as Duration)<br />- openEHRExposureDescription? (as string)<br />- openEHRManagement? (as string)<br />- substance? (as CodeableConcept)<br />- manifestation (as CodeableConcept[])<br />- description? (as string)<br />- onset? (as dateTime)<br />- severity? (as AllergyIntoleranceSeverity)<br />- exposureRoute? (as CodeableConcept)<br />- note? (as Annotation[]) | An AllergyIntolerance resource conforming to the CH AllergyIntolerance profile. |
 |    findClassTypeCombination(classCode: string) | Returns possible types for a given class code according to this mapping: [ehealthsuisse.art-decor.org](http://ehealthsuisse.art-decor.org/ch-epr-html-20200226T180620/voc-2.16.756.5.30.1.127.3.10.1.30-2020-02-26T174502.html) | **classCode**: class code to look for possible type codes | An Array of SystemCodeExtensions which contain possible type codes. |
 |    getClassCodeString(code: string, language: FhirUtilLanguageType) | Returns a display string for a given DocumentReference category (DocumentEntry.classCode) code. | **code**: SNOMED CT code of a category as string<br />**language**: The shorthand of the language of the display string ('en', de','fr', 'it' or 'rm') | The display property of the class, respectively category coding. |
@@ -326,6 +339,7 @@ Displays data of an AllergyIntolerance resource.
 [DocumentView.vue](../src/components/DocumentView.vue)
 
 #### Description
+
 This component displays a [FHIR Document](https://www.hl7.org/fhir/documents.html). The component render the different [Narratives](https://www.hl7.org/fhir/narrative.html) from the document as described [here](https://www.hl7.org/fhir/documents.html#presentation).
 
 #### mHealth transactions used
@@ -341,7 +355,6 @@ This component displays a [FHIR Document](https://www.hl7.org/fhir/documents.htm
 | options            | Options for the component. <br>- ratio: The aspect ratio of the QResponsive component used by DocumentView. By default the aspect ratio of an A4 portrait page is used (70/99).<br>- style: Possibility to provide a stylesheet for formatting the document by providing a StyleValue object. Per default the CSS in the style tag of the component will be used.          | DocumentViewOptions | no      |
 | languageString     | Two-character representation for the current language. | FhirUtilLanguageType | yes      |
 | translations       | Strings to overwrite default translations of component. | DocumentViewTranslationStrings | no      |
-
 
 #### Events emitted
 
@@ -430,14 +443,23 @@ Registers a patient in the EPD Playground.
 
 - uploaded-patient: Notifies parent component about registered patient. Emitted after successful upload of patient data.
 
-# 4 Changelog
+# 4 License
+
+This software is published under the [MIT License](LICENSE).
+
+# 5 Changelog
 
 <!-- prettier-ignore -->
 | Version | Date       | Changes |
 | ------- | ---------- |-------- |
-| 0.4.2   | 2022-12-22 | - Fixed a bug in createITI65Bundle, where the title in DocumentReference was not set |
-| 0.4.1   | 2022-12-08 | - Added DocumentView component |
-| 0.4.0   | 2022-10-28 | - added default languages German and French to components<br />- added useITI104() <br />- removed obsolete event upload-result from DocumentUpload and AllergyUpload<br />- fixed missing translation for table entries in DocumentSearch<br />- renamed some translation keys|
+| 0.4.7   | 2023-10-05 | - Added license |
+| 0.4.6   | 2023-09-12 | - Added oids parameter to FhirUtils constructor (⚠️ needs adjustments in your code!)<br />-Display narrative content from simple FHIR resources<br />-  fix some bugs found during Projectathon 2023 <br />- Update dependencies|
+| 0.4.5   | 2023-08-31 | Add setAccessToken() and deleteAccessToken() to EpdPlaygroundUtils |
+| 0.4.4   | 2023-04-25 | Fix a bug in in the DocumentSearch component, where file size was displayed incorrectly for large files |
+| 0.4.3   | -          | (skipped for technical reasons) |
+| 0.4.2   | 2022-12-22 | Fix a bug in createITI65Bundle, where the title in DocumentReference was not set |
+| 0.4.1   | 2022-12-08 | Add DocumentView component |
+| 0.4.0   | 2022-10-28 | - add default languages German and French to components<br />- add useITI104() <br />- remove obsolete event upload-result from DocumentUpload and AllergyUpload<br />- fix missing translation for table entries in DocumentSearch<br />- rename some translation keys|
 | 0.3.4   | 2022-10-20 | Update dependencies |
 | 0.3.3   | 2022-10-19 | - Add `AuthorRole` to ITI-65 Bundle<br />- Allow type `Substance` in AllergyUpload form<br />- Bugfix: LocalPatient now updates on changes<br />- Bugfix: generated EPR-SPID for manually created patients in RegisterPatient contained `NaN` |
 | 0.3.2   | 2022-09-06 | - Add multilanguage (DE, FR) aha.ch links to selected allergies in ALLERGY_IDENTIFICATION_CODES<br />- Bugfix: Multiple page search result bundles were not loaded correctly. |

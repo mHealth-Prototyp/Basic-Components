@@ -353,13 +353,17 @@ const DocumentSearch = defineComponent({
             align: 'left',
             field: (row: DocumentReference) => row.content[0].attachment.size,
             format: (val: number) => {
-              return (
-                (Math.round(val / 1.024) / 1000).toString() +
-                ' ' +
-                (val < 1024 * 1024
-                  ? this.componentTranslations.kiloByteLabel
-                  : this.componentTranslations.megaByteLabel)
-              );
+              if (val < 1024 * 1024) {
+                return (
+                  (Math.round(val / 1024)).toString() +
+                ' ' + this.componentTranslations.kiloByteLabel
+                );
+              } else {
+                return (
+                  (Math.round(val / (1024 * 10.24)) / 100).toString() +
+                  ' ' + this.componentTranslations.megaByteLabel
+                );
+              }
             },
             sortable: true
           }

@@ -151,7 +151,9 @@
     "uploadUnsuccessful": "Der Upload war nicht erfolgreich.",
     "addAllergyButton": "Allergiedaten hinzufügen",
     "editAllergyButton": "Allergiedaten bearbeiten",
-    "documentViewTitle": "FHIR-Dokumentenanzeiger"
+    "documentViewTitle": "FHIR-Dokumentenanzeige",
+    "resourceViewTitle": "FHIR-Ressourcenanzeige",
+    "resourceLink": "ganze Ressource anzeigen"
   },
   "registerPatient": {
     "titleText": "Geben Sie die Stammdaten der Person ein, die Sie auf dem EPD Playground registieren möchten.",

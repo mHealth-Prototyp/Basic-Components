@@ -412,6 +412,40 @@
       </q-card-section>
     </q-card>
   </q-dialog>
+
+  <q-dialog
+    v-model="showNarrativePopup"
+    class="dialog">
+    <q-card class="document-dialog-card narrative-card" v-if="resourceToDisplay">
+      <q-card-section class="card-title with-close-icon">
+        {{ componentTranslations.resourceViewTitle }}
+        <q-icon
+          @click="
+            () => {
+              showNarrativePopup = false;
+              resourceToDisplay = undefined;
+            }
+          "
+          name="fas fa-times"
+          class="close-icon"
+          flat
+          round
+          dense
+          v-close-popup />
+      </q-card-section>
+      <q-card-section>
+        <div v-html="resourceToDisplay.res.text?.div || '<div>Nothing to display</div>'" />
+      </q-card-section>
+      <q-card-actions align="center">
+        <div class="button-container">
+          <q-btn
+          @click="openDocumentWindow(resourceToDisplay.url, resourceToDisplay.description)">
+          {{ componentTranslations.resourceLink }}
+        </q-btn>
+        </div>
+      </q-card-actions>
+    </q-card>
+  </q-dialog>
   </div>
 </template>
 
@@ -429,7 +463,8 @@ import {
   DocumentReference,
   Bundle,
 Resource,
-BundleType
+BundleType,
+DomainResource
 } from '@i4mi/fhir_r4';
 import {PatientViewChildComponentsTranslationString, PatientViewTranslationStrings} from '../TranslationInterfaces';
 import DocumentSearch from './DocumentSearch.vue';
@@ -443,7 +478,7 @@ import AllergyView from './AllergyView.vue';
 import * as DE from '../assets/de.json';
 import * as FR from '../assets/fr.json';
 
-// Intstantiate class of interface to iterate translation keys
+// Instantiate class of interface to iterate translation keys
 class PatientViewTranslations implements PatientViewTranslationStrings {
   nameLabel = '';
   givenNameLabel = '';
@@ -473,6 +508,8 @@ class PatientViewTranslations implements PatientViewTranslationStrings {
   addAllergyButton = '';
   editAllergyButton = '';
   documentViewTitle = '';
+  resourceViewTitle = '';
+  resourceLink = '';
 }
 
 /**
@@ -541,6 +578,8 @@ export default defineComponent({
       editMode: false,
       showAddDocumentPopup: false,
       showAddAllergyPopup: false,
+      showNarrativePopup: false,
+      resourceToDisplay: undefined as {res: DomainResource, url?: string, description?: string} | undefined,
       updatingPatient: false,
       historyPatient: {resourceType: 'Patient'} as Patient,
       uploadedDocuments: new Array<DocumentReference>(),
@@ -814,32 +853,52 @@ export default defineComponent({
       this.localIds = pat.identifier?.filter((i) => i.system === oids.local) || [];
       this.historyPatient = JSON.parse(JSON.stringify(pat)) as Patient;
     },
+     /**
+     * Opens a new window with an url
+     * @param event   the Event as emitted from the SearchDocument component.
+     */
+    openDocumentWindow(url?: string, description?: string) {
+      if (
+            url &&
+            url.length > 0 &&
+            confirm(
+              this.componentTranslations.openPrompt1 +
+                (description || '?') +
+                this.componentTranslations.openPrompt2
+            )
+          ) {
+            window.open(url);
+          }
+    },
     /**
-     * Opens a new window for a document selected in the SearchDocument component.
+     * Displays a document selected in the SearchDocument component, or opens it in a new window.
      * @param event   the Event as emitted from the SearchDocument component.
      */
     openDocument(event: {document: string; metadata: DocumentReference}) {
       const document = event.document;
       const documentReference = event.metadata;
-      const resource = JSON.parse(document) as Resource;
-
-      if (this.checkIfIsAllergy(documentReference)) {
-        this.showAllergyPopup = true;
-        this.allergyToDisplay = resource as CHAllergyIntolerance;
-      } else if(this.checkIfIsDocumentBundle(resource)) {
-        this.showDocumentBundlePopup = true;
-        this.documentBundleToDisplay = JSON.parse(document) as Bundle;
-      }
-      else {
-        if (
-          confirm(
-            this.componentTranslations.openPrompt1 +
-              (documentReference.description || '?') +
-              this.componentTranslations.openPrompt2
-          )
-        ) {
-          window.open(documentReference.content[0].attachment.url);
+      try {
+        const resource = JSON.parse(document) as Resource;
+        if (this.checkIfIsAllergy(documentReference)) {
+          this.showAllergyPopup = true;
+          this.allergyToDisplay = resource as CHAllergyIntolerance;
+        } else if (this.checkIfIsDocumentBundle(resource)) {
+          this.showDocumentBundlePopup = true;
+          this.documentBundleToDisplay = JSON.parse(document) as Bundle;
+        } else if (resource.hasOwnProperty('text') && (resource as DomainResource).text?.div) {
+          this.resourceToDisplay = {
+            res: resource as DomainResource,
+            url: documentReference.content[0].attachment.url,
+            description: documentReference.description
+          };
+          this.showNarrativePopup = true;
         }
+        else {
+          this.openDocumentWindow(documentReference.content[0].attachment.url, documentReference.description);
+        }
+      }
+      catch (error) {
+        this.openDocumentWindow(documentReference.content[0].attachment.url, documentReference.description);
       }
     },
     /**
@@ -1079,5 +1138,26 @@ hr {
 .document-dialog-card {
   max-width: 600px;
   width: 100%;
+}
+
+.narrative-card :deep(h3) {
+  font-size: 1.2rem !important;
+  line-height: unset !important;
+  margin: 0.5em 0 !important;
+}
+.narrative-card :deep(h2) {
+  font-size: 1.5rem !important;
+  line-height: unset !important;
+  margin: 0.5em 0 !important;
+}
+.narrative-card :deep(h1) {
+  font-size: 2rem !important;
+  line-height: unset !important;
+  margin: 0.5em 0 !important;
+}
+.narrative-card .button-container {
+  display: block;
+  margin: 1em auto;
+  width: 50%;
 }
 </style>
