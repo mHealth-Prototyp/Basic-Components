@@ -326,6 +326,8 @@ export default defineComponent({
      */
     parseDocument(doc: CHVacdVaccinationRecordDocument) {
       this.invalid = false;
+      this.vaccinations = [];
+      this.risks = [];
       try {
         doc.entry.forEach((entry) => {
         switch (entry.resource?.resourceType) {
