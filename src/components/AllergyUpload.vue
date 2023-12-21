@@ -605,6 +605,7 @@ import {
   Organization,
   Patient
 } from '@i4mi/fhir_r4';
+import { CHAllergyIntolerance } from '@i4mi/fhir_ch';
 import FhirUtils, {
   AllergyIntoleranceReactionCH,
   SystemCode,
@@ -612,7 +613,6 @@ import FhirUtils, {
   FhirUtilLanguageType,
   AllergyIntoleranceParams,
   Iti65Metadata,
-  CHAllergyIntolerance,
   ITI_65_AUTHOR_ROLE,
   ALLERGYINTOLERANCE_DURATION_URL,
   ALLERGYINTOLERANCE_CERTAINTY_URL,
@@ -1824,7 +1824,8 @@ export default defineComponent({
           typeCoding: type,
           facilityCoding: this.facility?.defaultCoding,
           practiceSettingCoding: this.practiceSetting?.defaultCoding,
-          authorRole: ITI_65_AUTHOR_ROLE.HCP
+          authorRole: ITI_65_AUTHOR_ROLE.HCP,
+          author: this.$props.settings.organization
         } as Iti65Metadata;
 
         // create and a file object from CHAllergyIntolerance resource

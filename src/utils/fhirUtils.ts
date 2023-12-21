@@ -11,7 +11,6 @@ import {
   AllergyIntoleranceReaction,
   CodeableConcept,
   Duration,
-  AllergyIntolerance,
   dateTime,
   Reference,
   Meta,
@@ -26,9 +25,13 @@ import {
   AllergyIntoleranceCriticality,
   AllergyIntoleranceSeverity,
   Coding,
-  getIdentifierString
+  Practitioner,
+  List,
+  getIdentifierString as i4miIdentifierString,
+  Bundle
 } from '@i4mi/fhir_r4';
 import {v4 as uuid} from 'uuid';
+import { CHAllergyIntolerance, CHDocumentReferenceEPR } from '@i4mi/fhir_ch';
 import {AllergySystemCodeExtension} from './allergyCodes';
 import {Iti65DocumentBundle, Iti65DocumentBundleEntry, Oids} from './epdPlaygroundUtils';
 import {CLASS_CODES, CLASS_TYPE_COMBINATIONS, FACILITY_CLASS_CODES, TYPE_CODES} from './snomedCodes';
@@ -99,7 +102,7 @@ export default class FhirUtils {
       // handle todays date
       const todayString = new Date().toISOString().substring(0, 10);
 
-      const identifier = patient.identifier.find((identifier) => identifier.system === this.OIDS.mpiId);
+      const identifier = patient.identifier.find((identifier: Identifier) => identifier.system === this.OIDS.mpiId);
 
       if (!identifier || !identifier.value) {
         return reject('No MPI identifier was provided, can not generate ITI65 Bundle.');
@@ -134,7 +137,7 @@ export default class FhirUtils {
       newBundle.entry.push(dataEntry);
 
       // SubmissionSetrepresents collection of documents
-      const submissionSetEntry = {
+      const submissionSetEntry: Iti65DocumentBundleEntry = {
         fullUrl: submissionSetIdString,
         resource: {
           resourceType: 'List',
@@ -192,19 +195,24 @@ export default class FhirUtils {
             }
           ],
           date: todayString
-        },
+        } as List,
         request: {
-          method: 'POST',
+          method: BundleHTTPVerb.POST,
           url: submissionSetIdString
         }
-      } as Iti65DocumentBundleEntry;
+      };
       newBundle.entry.push(submissionSetEntry);
 
       // document reference entry describes content, context and relation to patient
-      const documentReferenceEntry = {
+      const documentReferenceEntry: Iti65DocumentBundleEntry = {
         fullUrl: documentIdString,
         resource: {
           resourceType: 'DocumentReference',
+          meta: {
+            profile: ['http://fhir.ch/ig/ch-core/StructureDefinition/ch-core-documentreference-epr']
+          },
+          timestamp: new Date().toISOString(),
+          author: [],
           contained: [ patient ],
           masterIdentifier: {
             value: documentReferenceMasterId
@@ -274,12 +282,21 @@ export default class FhirUtils {
               reference: '#' + patient.id
             }
           }
-        },
+        } as CHDocumentReferenceEPR,
         request: {
-          method: 'POST',
+          method: BundleHTTPVerb.POST,
           url: documentIdString
         }
-      } as Iti65DocumentBundleEntry;
+      };
+      if (metaData.author) {
+        metaData.author.id = metaData.author.id || 'document-author';
+        const docRef = documentReferenceEntry.resource as CHDocumentReferenceEPR;
+        docRef.contained!.push(metaData.author);
+        docRef.author.push({
+          type: metaData.author.resourceType,
+          reference: '#' +  metaData.author.id
+        });
+      }
       newBundle.entry.push(documentReferenceEntry);
 
       // finally converting file to handle as promise
@@ -733,8 +750,19 @@ export default class FhirUtils {
    * @deprecated    use @i4mi/fhir_r4 getIdentifierString instead
    */
   public getIdentifierString(patient: Patient, oid: string): string {
-    const oidWithPrefix = oid.indexOf('urn:oid') === 0 ? oid : 'urn:oid:' + oid;
-    return getIdentifierString(patient, oidWithPrefix);
+    return i4miIdentifierString(patient, oid);
+  }
+
+  /**
+   * Gets a resource that is referenced from a bundle
+   * @param   bundle    the Bundle that contains the resource
+   * @param   reference the reference string pointing to the resource
+   * @return  the referenced resource (or undefined, if nothing was found)
+   */
+  public getLinkedResource(bundle: Bundle, reference?: string): Resource | undefined {
+    if (!reference) return undefined;
+    const id = reference.split('/').at(-1);
+    return bundle.entry?.find((e) => e.resource?.id === id)?.resource;
   }
 
   /**
@@ -788,8 +816,9 @@ export default class FhirUtils {
  * @param typeCoding              type of document: http://hl7.org/fhir/R4/valueset-c80-doc-typecodes.html
  * @param facilityCoding          type of organizational setting where the clinical encounter, service, interaction,
  *                                or treatment occurred: http://hl7.org/fhir/R4/valueset-c80-facilitycodes.html
- * @param practiceSettingCoding  clinical specialty of the clinician or provider who interacted with, treated,
+ * @param practiceSettingCoding   clinical specialty of the clinician or provider who interacted with, treated,
  *                                or provided a service to/for the patient: http://hl7.org/fhir/R4/valueset-c80-practice-codes.html
+ * @param author                  author of the document as Practitioner or Patient resource
  */
 export interface Iti65Metadata {
   title: string;
@@ -802,6 +831,7 @@ export interface Iti65Metadata {
   facilityCoding: SystemCode;
   practiceSettingCoding: SystemCode;
   authorRole: ITI_65_AUTHOR_ROLE;
+  author?: Practitioner | Patient | Organization;
 }
 
 /**
@@ -899,18 +929,6 @@ export interface AllergyIntoleranceEpisodeParams {
   severity?: AllergyIntoleranceSeverity;
   exposureRoute?: CodeableConcept;
   note?: Annotation[];
-}
-
-/**
- * This implements the changes from the CHAllergyIntolerance profile to the default AllergyIntolerance
- * ressource (where feasible in TypeScript interface).
- * @see https://fhir.ch/ig/ch-allergyintolerance/StructureDefinition-ch-allergyintolerance.html
- */
-export interface CHAllergyIntolerance extends AllergyIntolerance {
-  code: CodeableConcept; // code is not optional in CHAllergyIntolerance
-  meta: {
-    profile: ['http://fhir.ch/ig/ch-allergyintolerance/StructureDefinition/ch-allergyintolerance'];
-  };
 }
 
 /**

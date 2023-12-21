@@ -485,7 +485,8 @@ export default defineComponent({
         typeCoding: type,
         facilityCoding: this.facility?.defaultCoding,
         practiceSettingCoding: this.practiceSetting?.defaultCoding,
-        authorRole: ITI_65_AUTHOR_ROLE.HCP
+        authorRole: ITI_65_AUTHOR_ROLE.HCP,
+        author: this.$props.settings.organization
       } as Iti65Metadata;
 
       if (this.$props.patient && this.file) {

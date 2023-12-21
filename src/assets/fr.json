@@ -172,5 +172,29 @@
     "noSubjectNarrative": "Le sujet de la composition n'a pas de représentation narrative.",
     "noCompositionNarrative": "La composition n'a pas de représentation narrative.",
     "noSectionNarrative": "La section # n'a pas de représentation narrative."
+  },
+  "vaccinationDocument": {
+    "title" : "Document de vaccination de",
+    "unknown": "inconnu",
+    "creator" : "Créateur",
+    "createdOn" : "Créé le",
+    "vaccine" : "Vaccin",
+    "yes": "Oui",
+    "no": "Non",
+    "doseNumber" : "Dose",
+    "targetDisease" : "maladie(s) cible(s)",
+    "completed" : "Terminé",
+    "occurence" : "Administré le",
+    "performer" : "Administré par",
+    "code" : "Code",
+    "recordedBy" : "enregistré par",
+    "recordedOn" : " le",
+    "invalidDocument" : "Le document n'est pas un document de vaccination correct selon la spécification CH VACD",
+    "vaccinationTitle" : "Vaccins",
+    "riskTitle" : "risques",
+    "absentReasonNoImmunizationInfo" : "Aucune information sur la vaccination n'est disponible.",
+    "absentReasonNoKnownImmunizations" : "Aucune vaccination connue.",
+    "noVaccines" : "Aucune vaccination n'est (encore) documentée",
+    "noRisks" : "Aucun risque n'est (encore) documenté"
   }
 }

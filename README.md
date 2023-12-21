@@ -20,9 +20,10 @@ For examples of using the components, check out https://github.com/mHealth-Proto
   - [3.4 Allergy Upload](#34-allergy-upload)
   - [3.5 Allergy View](#35-allergy-view)
   - [3.6 Document View](#36-document-view)
-  - [3.7 Patient Search](#37-patient-search)
-  - [3.8 Patient View](#38-patient-view)
-  - [3.9 Register Patient](#39-register-patient)
+  - [3.7 Vaccination Document Card](#38-vaccination-document-card)
+  - [3.8 Patient Search](#38-patient-search)
+  - [3.9 Patient View](#39-patient-view)
+  - [3.10 Register Patient](#310-register-patient)
 - [4 License](#4-license)
 - [5 Changelog](#5-changelog)
 
@@ -108,7 +109,7 @@ Following FHIR transactions are provided by the epdPlaygroundUtils class:
 | -------- | ----------- | ---------------- | ------ | -------- |
 |    useITI65(\_documentBundle: Iti65DocumentBundle) | Uploads a document. | [ITI-65 Provide Document Bundle](http://fhir.ch/ig/ch-epr-mhealth/iti-65.html) | **\_documentBundle**: a Document Bundle representing a document, can be created with _createIti65Bundle()_ from fhirUtils.ts  | A Promise with the uploaded Document Bundle with servers IDs |
 |    useITI66(\_params: Partial\<Iti66Params>) | Search for Submission Sets by given search parameters. | [ITI-66 Find Document Lists](http://fhir.ch/ig/ch-epr-mhealth/iti-66.html) | **\_params**: the FHIR search parameters (see [ihe.net](https://profiles.ihe.net/ITI/TF/Volume2/ITI-18.html#3.18.4.1.2.3.7.2) for more details). The \_params object can contain one or more of following properties: <br />- code (as string)<br />- date (as string)<br />- designationType (as string)<br />- identifier (as string)<br />- patient (as string)<br />- sourceId (as string)<br />- status (as string or ListStatus when using [@i4mi/fhir_r4](https://github.com/i4mi/fhir-resources-r4))<br />- 'patient.identifier' (as string)<br />- 'source.given' (as string)<br />- 'source.family' (as string) | A Promise with an Array of List resources matching the parameters |
-|    useITI67(\_params: Partial\<Iti67Params>) | Searches for documents of given patient and search parameters. | [ITI-67 Find Document References](http://fhir.ch/ig/ch-epr-mhealth/iti-67.html) | **\_params**: the FHIR search parameters (see [ihe.net](https://profiles.ihe.net/ITI/TF/Volume2/ITI-18.html#3.18.4.1.2.3.7.1) for more details). The \_params object can contain one or more of following properties:<br />- 'author.given' (as string)<br />- 'author.family' (as string)<br />- category (as string)<br />- creation (as string)<br />- date (as string)<br />- event (as string)<br />- facility (as string)<br />- format (as string)<br />- identifier (as string)<br />- patient (as string)<br />- 'patient.identifier' (as string)<br />- period (as string)<br />- related (as string)<br />- 'security-label' (as string)<br />- setting (as string)<br />- sourceId (as string)<br />- status (as string or DocumentReferenceStatus when using [@i4mi/fhir_r4](https://github.com/i4mi/fhir-resources-r4))<br />- type (as string) | A Promise with an array of DocumentReference resources matching the search parameters |
+|    useITI67(\_params: Partial\<Iti67Params>) | Searches for documents of given patient and search parameters. | [ITI-67 Find Document References](http://fhir.ch/ig/ch-epr-mhealth/iti-67.html) | **\_params**: the FHIR search parameters (see [ihe.net](https://profiles.ihe.net/ITI/TF/Volume2/ITI-18.html#3.18.4.1.2.3.7.1) for more details). The \_params object can contain one or more of following properties:<br />- 'author.given' (as string)<br />- 'author.family' (as string)<br />- category (as string)<br />- creation (as string)<br />- date (as string)<br />- event (as string)<br />- facility (as string)<br />- format (as string)<br />- identifier (as string)<br />- patient (as string)<br />- 'patient.identifier' (as string)<br />- period (as string)<br />- related (as string)<br />- 'security-label' (as string)<br />- setting (as string)<br />- sourceId (as string)<br />- status (as string or DocumentReferenceStatus when using [@i4mi/fhir_r4](https://github.com/i4mi/fhir-resources-r4))<br />- type (as string) | A Promise with an array of CHDocumentReferenceEPR resources matching the search parameters |
 |    useITI68(\_reference: DocumentReference \| string) | Downloads document by given DocumentReference or URL. | [ITI-68 Retrieve Document](https://fhir.ch/ig/ch-epr-mhealth/iti-68.html) | **\_reference**: a DocumentReference resource or a string containing and URL to a document | A Promise with the document as a string |
 | useITI78(\_params: Partial\<Iti78Params>) | Search patients by demographic characteristics. | [ITI-78 Mobile Patient Demographics Query](https://profiles.ihe.net/ITI/PDQm/ITI-78.html) | **\_params**: the FHIR search parameters (see [ihe.net](https://profiles.ihe.net/ITI/PDQm/ITI-78.html#23784121-search-parameters) for more details). The \_params object can contain one or more of following properties:<br />- gender (as string)<br />- family (as string)<br />- given (as string)<br />- 'address-city' (as string)<br />- 'address-country' (as string)<br />- 'address-postalcode' (as string)<br />- 'address-state' (as string)<br />Currently, not all IHE parameters are supported by the Mobile Access Gateway. | A Promise with an array of Patient resources matching the search parameters. |
 |    useITI83(\_sourceIdentifier: string, \_targetSystems?: string[]) | Request the MPI-PID and the EPR-SPID identifier for a given local patient identifier. | [ITI-83 Mobile Patient Identifier Cross-Reference Query](http://fhir.ch/ig/ch-epr-mhealth/iti-83.html) | **\_sourceIdentifier**: local patient identifier (as string)<br />**\_targetSystems?**: target systems as OIDs (optional, as Array of strings) | A Promise with a FHIR resource Parameters |
@@ -132,7 +133,7 @@ The constructor for patientUtils needs only one argument:
 <!-- prettier-ignore -->
 |  Function | Description | Params | Returns |
 | --------- | ----------- | ------ | ------- |
-|    createIti65Bundle(patient: Patient, file: File, metaData: Iti65Metadata) | Creates a document bundle with a binary file according to [ITI-65](https://fhir.ch/ig/ch-epr-mhealth/iti-65.html). | **patient**: the patient FHIR resource the document belongs to (must have a MPI identifier)<br /> **file**: the file to upload <br /> **metaData**: meta data describing the content of the file:<br />- title (as string)<br />- description (as string)<br />- isFhir? indicates that a .json file has FHIR content (as boolean)<br />- contentLanguage (as string)<br />- sourceIdentifier (as string)<br />- categoryCoding (as SystemCode)<br />- typeCoding (as SystemCode)<br />- facilityCoding (as SystemCode)<br />- practiceSettingCoding (as SystemCode)<br />- authorRole (as ITI_65_AUTHOR_ROLE): Describing the role of the file author ('PAT', 'HCP', 'ASS', 'REP' or 'TCU')  | A promise with a document bundle resource that can be used for the upload. |
+|    createIti65Bundle(patient: Patient, file: File, metaData: Iti65Metadata) | Creates a document bundle with a binary file according to [ITI-65](https://fhir.ch/ig/ch-epr-mhealth/iti-65.html). | **patient**: the patient FHIR resource the document belongs to (must have a MPI identifier)<br /> **file**: the file to upload <br /> **metaData**: meta data describing the content of the file:<br />- title (as string)<br />- description (as string)<br />- isFhir? indicates that a .json file has FHIR content (as boolean)<br />- contentLanguage (as string)<br />- sourceIdentifier (as string)<br />- categoryCoding (as SystemCode)<br />- typeCoding (as SystemCode)<br />- facilityCoding (as SystemCode)<br />- practiceSettingCoding (as SystemCode)<br />- authorRole (as ITI_65_AUTHOR_ROLE): Describing the role of the file author ('PAT', 'HCP', 'ASS', 'REP' or 'TCU')<br />- The author of the document, as Practitioner or Patient resource.  | A promise with a document bundle resource that can be used for the upload. |
 |    createCHAllergyIntolerance(paramsAllergy: AllergyIntoleranceParams, paramsEpisodes?: AllergyIntoleranceEpisodeParams[]) | Creates an AllergyIntolerance resource according to CH AllergyIntolerance specification. | **paramsAllergy**: Information about allergy or intolerance (for detailed parameter types, see [@i4mi/fhir_r4](https://github.com/i4mi/fhir-resources-r4)):<br />- code (as CodeableConcept)<br />- patient (as Patient)<br />- id? (as string)<br />- meta? (as Meta)<br />- implicitRules? (as uri)<br />- language? (as code)<br />- text? (as Narrative)<br />- contained? (as Resource[])<br />- extension? (as Extension[])<br />- abatementDateTimeUvIps? (as dateTime)<br />- identifier? (as Identifier[])<br />- clinicalStatus? (as CodeableConcept)<br />- verificationStatus? (as CodeableConcept)<br />- type? (as AllergyIntoleranceType)<br />- category? (as AllergyIntoleranceCategory[])<br />- criticality? (as AllergyIntoleranceCriticality)<br />- encounter? (as Reference)<br />- onsetDateTime? (as dateTime)<br />- recordedDate? (as dateTime)<br />- recorder? (as Reference)<br />- asserter? (as Reference)<br />- lastOccurrence? (as dateTime)<br />- note? (as Annotation[])<br />**paramsEpisodes**: Adverse Reaction Events linked to exposure to substance (for detailed parameter types, see [@i4mi/fhir_r4](https://github.com/i4mi/fhir-resources-r4)):<br />- id? (as string)<br />- extension? (as Extension[])<br />- allergyintoleranceCertainty? (as CodeableConcept)<br />- allergyintoleranceDuration? (as Duration)<br />- openEHRLocation? (as CodeableConcept)<br />- openEHRExposureDate? (as dateTime)<br />- openEHRExposureDuration? (as Duration)<br />- openEHRExposureDescription? (as string)<br />- openEHRManagement? (as string)<br />- substance? (as CodeableConcept)<br />- manifestation (as CodeableConcept[])<br />- description? (as string)<br />- onset? (as dateTime)<br />- severity? (as AllergyIntoleranceSeverity)<br />- exposureRoute? (as CodeableConcept)<br />- note? (as Annotation[]) | An AllergyIntolerance resource conforming to the CH AllergyIntolerance profile. |
 |    findClassTypeCombination(classCode: string) | Returns possible types for a given class code according to this mapping: [ehealthsuisse.art-decor.org](http://ehealthsuisse.art-decor.org/ch-epr-html-20200226T180620/voc-2.16.756.5.30.1.127.3.10.1.30-2020-02-26T174502.html) | **classCode**: class code to look for possible type codes | An Array of SystemCodeExtensions which contain possible type codes. |
 |    getClassCodeString(code: string, language: FhirUtilLanguageType) | Returns a display string for a given DocumentReference category (DocumentEntry.classCode) code. | **code**: SNOMED CT code of a category as string<br />**language**: The shorthand of the language of the display string ('en', de','fr', 'it' or 'rm') | The display property of the class, respectively category coding. |
@@ -360,7 +361,33 @@ This component displays a [FHIR Document](https://www.hl7.org/fhir/documents.htm
 
 - none
 
-### 3.7 Patient Search
+### 3.7 Vaccination Document Card
+
+[VaccinationDocumentView.vue](../src/components/VaccinationDocumentView.vue)
+
+#### Description
+
+Displays a [CH VACD Vaccination Record Document](https://fhir.ch/ig/ch-vacd/StructureDefinition-ch-vacd-document-vaccination-record.html) as a table.
+
+#### mHealth transactions used
+
+- none
+
+#### Props
+<!-- prettier-ignore -->
+| Name                         | Description | Type | required |
+| ---------------------------- | ----------- | ---- | -------- |
+| document                     | The Vaccination Record Document resource to be displayed. | CHVacdVaccinationRecordDocument (FHIR resource) | yes |
+| fhirUtils                    | FhirUtils object initialized with the projects setup (see [2.2](#22-fhirutils)) | FhirUtils | yes |
+| languageString               | Two-character representation for the current language. | FhirUtilLanguageType | yes |
+| isMobile                     | Defines if component is displayed on a mobile device (with less screen space) | boolean | no |
+| translations                 | Strings to overwrite default translations of component. | VaccinationDocumentCardTranslationStrings | no |
+
+#### Events emitted
+
+- none
+
+### 3.8 Patient Search
 
 [PatientSearch.vue](../src/components/PatientSearch.vue)
 
@@ -386,7 +413,7 @@ Searches & displays patients on the EPD Playground.
 
 - found-patient: Notify parent component about found patient data. Emitted when user selects a patient from the search result list.
 
-### 3.8 Patient View
+### 3.9 Patient View
 
 [PatientView.vue](../src/components/PatientView.vue)
 
@@ -416,7 +443,7 @@ Shows patient details including documents. Also provides functionality to edit p
 
 - edited-patient: Notifies parent components about updated patient. Emitted after successful upload of patient data.
 
-### 3.9 Register Patient
+### 3.10 Register Patient
 
 [RegisterPatient.vue](../src/components/RegisterPatient.vue)
 
@@ -452,6 +479,7 @@ This software is published under the [MIT License](LICENSE).
 <!-- prettier-ignore -->
 | Version | Date       | Changes |
 | ------- | ---------- |-------- |
+| 0.5.0   | 2023-12-XX | - ⚠️ deprecated CHAllergyIntolerance interface: use export from [@i4mi/fhir_ch](https://www.npmjs.com/package/@i4mi/fhir_ch) instead<br />- Added VaccinationDocumentView<br />- Update dependencies |
 | 0.4.7   | 2023-10-05 | - Added license |
 | 0.4.6   | 2023-09-12 | - Added oids parameter to FhirUtils constructor (⚠️ needs adjustments in your code!)<br />-Display narrative content from simple FHIR resources<br />-  fix some bugs found during Projectathon 2023 <br />- Update dependencies|
 | 0.4.5   | 2023-08-31 | Add setAccessToken() and deleteAccessToken() to EpdPlaygroundUtils |

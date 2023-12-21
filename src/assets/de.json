@@ -172,5 +172,29 @@
     "noSubjectNarrative": "Das Subjekt der Komposition hat keine narrative Darstellung.",
     "noCompositionNarrative": "Die Komposition hat keine narrative Darstellung.",
     "noSectionNarrative": "Die Sektion # hat keine narrative Darstellung."
+  },
+  "vaccinationDocument": {
+    "title": "Impfdokument von",
+    "unknown": "unbekannt",
+    "creator": "Ersteller",
+    "createdOn": "Erstellt am",
+    "vaccine": "Impfstoff",
+    "yes": "Ja",
+    "no": "Nein",
+    "doseNumber": "Dosis",
+    "targetDisease": "Zielerkrankung(en)",
+    "completed": "Abgeschlossen",
+    "occurence": "Verabreicht am",
+    "performer": "Verabreicht von",
+    "code": "Code",
+    "invalidDocument": "Das Dokument ist kein korrektes Impfdokument nach CH VACD Spezifikation.",
+    "recordedBy": "erfasst von ",
+    "recordedOn": " am ",
+    "vaccinationTitle": "Impfungen",
+    "riskTitle": "Risiken",
+    "absentReasonNoImmunizationInfo": "Keine Impf-Informationen vorliegend.",
+    "absentReasonNoKnownImmunizations": "Keine bekannten Impfungen.",
+    "noVaccines": "Es sind (noch) keine Impfungen dokumentiert.",
+    "noRisks": "Es sind (noch) keine Risiken dokumentiert."
   }
 }
