@@ -7,6 +7,7 @@ import PatientView from './components/PatientView.vue';
 import RegisterPatient from './components/RegisterPatient.vue';
 import AllergyView from './components/AllergyView.vue';
 import DocumentView from './components/DocumentView.vue';
+import VaccinationDocumentCard from './components/VaccinationDocumentCard.vue';
 
 import {
   AllergyUploadTranslationStrings,
@@ -17,7 +18,8 @@ import {
   PatientSearchTranslationStrings,
   PatientViewTranslationStrings,
   RegisterPatientTranslationStrings,
-  DocumentViewTranslationStrings
+  DocumentViewTranslationStrings,
+  VaccinationDocumentCardTranslationStrings
 } from './TranslationInterfaces';
 
 import {
@@ -59,7 +61,6 @@ import FhirUtils, {
   SUPPORTED_LANGUAGE_DISPLAYS,
   ContactInfo,
   AllergyIntoleranceParams,
-  CHAllergyIntolerance,
   AllergyIntoleranceEpisodeParams,
   AllergyIntoleranceReactionCH,
   CH_ALLERGY_INTOLERANCE_PROFILE,
@@ -84,6 +85,8 @@ import {
   TYPE_CODES
 } from './utils/snomedCodes';
 
+import { CHAllergyIntolerance } from '@i4mi/fhir_ch';
+
 export {
   // Quasar Components
   AllergyUpload,
@@ -104,6 +107,8 @@ export {
   AllergyViewTranslationStrings,
   DocumentView,
   DocumentViewTranslationStrings,
+  VaccinationDocumentCard,
+  VaccinationDocumentCardTranslationStrings,
   // EpdPlaygroundUtils
   EpdPlaygroundUtils,
   EpdPlaygroundUtilsSettings,
@@ -125,7 +130,6 @@ export {
   FhirUtilLanguageType,
   SUPPORTED_LANGUAGE_DISPLAYS,
   ContactInfo,
-  CHAllergyIntolerance,
   AllergyIntoleranceParams,
   AllergyIntoleranceEpisodeParams,
   AllergyIntoleranceReactionCH,
@@ -160,5 +164,7 @@ export {
   REACTION_SEVERITY_CODES,
   REACTION_CERTAINTY_CODES,
   REACTION_LOCATION_CODES,
-  EXPOSURE_PATH_CODES
+  EXPOSURE_PATH_CODES,
+  // from @i4mi/fhir_ch, just here for backward compatibility
+  CHAllergyIntolerance
 };

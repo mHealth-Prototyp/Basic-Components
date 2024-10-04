@@ -292,8 +292,8 @@
 <script lang="ts">
 import {defineComponent, PropType} from 'vue';
 import {AllergyViewTranslationStrings} from '../TranslationInterfaces';
+import { CHAllergyIntolerance } from '@i4mi/fhir_ch';
 import FhirUtils, {
-  CHAllergyIntolerance,
   FhirUtilLanguageType,
   OPENEHR_EXPOSURE_DATE_URL,
   OPENEHR_EXPOSURE_LOCATION_URL

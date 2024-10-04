@@ -127,7 +127,7 @@ const SAMPLE_CITIES = [
   },
   {
     name: 'Biel',
-    zip: '2401',
+    zip: '2501',
     state: 'BE',
     weight: 421
   },

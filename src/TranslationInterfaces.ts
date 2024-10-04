@@ -277,3 +277,32 @@ export interface DocumentViewTranslationStrings {
   noCompositionNarrative: string;
   noSectionNarrative: string;
 }
+
+/**
+ * Defines the strings displayed in the VaccinationDocumentCard component.
+ * Used this way to be independent from different i18n systems.
+ */
+export interface VaccinationDocumentCardTranslationStrings {
+  unknown: string;
+  title: string;
+  creator: string;
+  createdOn: string;
+  vaccine: string;
+  doseNumber: string;
+  targetDisease: string;
+  completed: string;
+  occurence: string;
+  yes: string;
+  no: string;
+  performer: string;
+  code: string;
+  recordedBy: string;
+  recordedOn: string;
+  vaccinationTitle: string;
+  invalidDocument: string;
+  riskTitle: string;
+  absentReasonNoImmunizationInfo: string;
+  absentReasonNoKnownImmunizations: string;
+  noVaccines: string;
+  noRisks: string;
+}

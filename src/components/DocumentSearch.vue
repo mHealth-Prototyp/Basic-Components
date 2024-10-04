@@ -57,15 +57,14 @@
 <script lang="ts">
 import {DocumentReference, Patient, DocumentReferenceStatus, Identifier, Coding} from '@i4mi/fhir_r4';
 import {QLinearProgress, QIcon, QTable, QInput, QTableColumn} from 'quasar';
-import FhirUtils, {CHAllergyIntolerance, FhirUtilLanguageType} from '../utils/fhirUtils';
+import FhirUtils, {FhirUtilLanguageType} from '../utils/fhirUtils';
+import {CHAllergyIntolerance} from '@i4mi/fhir_ch'
 import {defineComponent, PropType} from 'vue';
 import EpdPlaygroundUtils from '../utils/epdPlaygroundUtils';
 import {DocumentSearchTranslationStrings} from '../TranslationInterfaces';
 import * as DE from '../assets/de.json';
 import * as FR from '../assets/fr.json';
-import {AllergyIdentificationType} from '..';
-import {getAllergyIdentificationCodesByType} from '../utils/allergyCodes';
-import {translateDevTools} from '@intlify/core-base';
+import {AllergyIdentificationType, getAllergyIdentificationCodesByType} from '../utils/allergyCodes';
 
 // the delay for transactions when in demo mode (in ms)
 const DEMO_MODE_DELAY = 2000;

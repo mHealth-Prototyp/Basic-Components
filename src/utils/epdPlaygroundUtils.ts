@@ -1,3 +1,4 @@
+import { CHDocumentReferenceEPR } from '@i4mi/fhir_ch';
 import {
   HttpMethod,
   Resource,
@@ -112,13 +113,13 @@ export default class EpdPlaygroundUtils {
    *                 e.g. {given: 'Alan'}
    * @returns        a Promise with List resources matching the given search criteria.
    */
-  public useITI67(_params: Partial<Iti67Params>): Promise<DocumentReference[]> {
+  public useITI67(_params: Partial<Iti67Params>): Promise<CHDocumentReferenceEPR[]> {
     return this.fetch('DocumentReference', HttpMethod.GET, _params).then((resource) => {
       const bundle = resource as Bundle;
       if (bundle.entry) {
-        return bundle.entry.map((entry) => entry.resource as DocumentReference);
+        return bundle.entry.map((entry) => entry.resource as CHDocumentReferenceEPR);
       } else {
-        return new Array<DocumentReference>();
+        return new Array<CHDocumentReferenceEPR>();
       }
     });
   }
@@ -600,7 +601,7 @@ export interface Iti65DocumentBundle extends Bundle {
  */
 export interface Iti65DocumentBundleEntry {
   fullUrl: string;
-  resource: Binary | List | DocumentReference;
+  resource: Binary | List | CHDocumentReferenceEPR;
   request: {
     method: BundleHTTPVerb.POST;
     url: string;
